@@ -1,0 +1,236 @@
+/* src/pages/LivroDetalhe.css */
+
+/* O <main> global (RotaProtegida.css) trava a largura em 760px pra
+   deixar o texto confortável de ler nas outras páginas, mas aqui, com
+   a capa grande ao lado do texto, isso sobra espaço em branco demais
+   dos dois lados. Alarga só quando esta página está dentro do <main>. */
+main:has(.pagina-livro-detalhe) {
+  max-width: 1100px;
+}
+
+.link-voltar {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+  text-decoration: none;
+}
+
+.link-voltar:hover {
+  color: var(--cor-acento);
+}
+
+.cabecalho-livro-detalhe {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.capa-livro-detalhe {
+  width: 280px;
+  flex-shrink: 0;
+  /* Trava a proporção de capa de livro (2:3) e recorta o excesso com
+     object-fit, então a imagem nunca aparece esticada ou achatada,
+     não importa o tamanho real que a Google Books devolveu. */
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid var(--cor-borda);
+  box-shadow: 0 8px 24px rgba(16, 0, 43, 0.15);
+}
+
+.info-livro-detalhe {
+  flex: 1;
+  min-width: 0;
+}
+
+.info-livro-detalhe h1 {
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.autor-livro-detalhe {
+  color: var(--cor-texto-suave);
+  font-size: 1rem;
+  margin: 0 0 12px;
+}
+
+.metadados-livro-detalhe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+}
+
+.metadados-livro-detalhe span {
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+
+.etiqueta-genero {
+  color: var(--cor-acento) !important;
+  border-color: var(--cor-acento) !important;
+}
+
+.resumo-avaliacao-livro {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+
+.resumo-avaliacao-livro .estrelas {
+  margin: 0;
+}
+
+.total-resenhas-livro {
+  color: var(--cor-texto-suave);
+  font-size: 0.85rem;
+}
+
+.sinopse-livro-detalhe {
+  line-height: 1.6;
+  margin: 0 0 20px;
+  max-width: 720px;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.info-livro-detalhe .botao-primario {
+  display: inline-block;
+  text-decoration: none;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+.secao-resenhas-livro h2 {
+  font-size: 1.25rem;
+  margin-bottom: 16px;
+}
+
+.lista-resenhas-livro {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-resenha-livro {
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.card-resenha-livro-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.card-resenha-livro-autor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-resenha-livro-autor strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.card-resenha-livro-autor .estrelas {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+}
+
+.card-resenha-livro-tempo {
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+  white-space: nowrap;
+}
+
+.card-resenha-livro h3 {
+  font-size: 1.1rem;
+  margin: 4px 0;
+}
+
+.card-resenha-livro-texto {
+  margin: 0 0 8px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.card-resenha-livro-acoes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---------------------------------------------------------
+   Classes compartilhadas com o Feed (avatar, estrelas, botões)
+   duplicadas aqui pra essa página não depender do Feed.css
+   ter sido carregado antes.
+--------------------------------------------------------- */
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--cor-fundo);
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.estrelas {
+  color: var(--cor-destaque);
+  letter-spacing: 1px;
+  margin: 4px 0;
+}
+
+.botao-curtir {
+  background: transparent;
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.botao-curtir:hover {
+  border-color: var(--cor-destaque);
+}
+
+.botao-curtir.ativo {
+  border-color: var(--cor-destaque);
+  color: var(--cor-destaque);
+}
+
+.botao-excluir {
+  background: transparent;
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.botao-excluir:hover {
+  border-color: #c1121f;
+  color: #c1121f;
+}

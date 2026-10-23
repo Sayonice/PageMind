@@ -1,0 +1,47 @@
+// src/utils/configuracoes.js
+//
+// Preferências de interface (tema, tipografia, layout) guardadas só no
+// navegador da pessoa — não fazem parte do perfil no banco, então não
+// passam pelo back-end.
+
+const CHAVE_CONFIG = 'pagemind_config';
+
+const PADRAO = {
+  tema: 'sistema', // 'claro' | 'escuro' | 'sistema'
+  tamanhoFonte: 'medio', // 'pequeno' | 'medio' | 'grande'
+  visualizacaoCompacta: false,
+  animacoes: true,
+};
+
+const ESCALAS_FONTE = { pequeno: 0.9, medio: 1, grande: 1.15 };
+
+export function obterConfiguracoes() {
+  try {
+    const salvo = JSON.parse(localStorage.getItem(CHAVE_CONFIG));
+    return { ...PADRAO, ...salvo };
+  } catch {
+    return PADRAO;
+  }
+}
+
+export function salvarConfiguracoes(config) {
+  localStorage.setItem(CHAVE_CONFIG, JSON.stringify(config));
+  aplicarConfiguracoes(config);
+}
+
+export function aplicarConfiguracoes(config = obterConfiguracoes()) {
+  const raiz = document.documentElement;
+
+  let temaResolvido = config.tema;
+  if (temaResolvido === 'sistema') {
+    temaResolvido = window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'escuro'
+      : 'claro';
+  }
+  raiz.setAttribute('data-theme', temaResolvido);
+
+  raiz.style.setProperty('--escala-fonte', ESCALAS_FONTE[config.tamanhoFonte] ?? 1);
+
+  document.body.classList.toggle('layout-compacto', !!config.visualizacaoCompacta);
+  document.body.classList.toggle('sem-animacoes', !config.animacoes);
+}

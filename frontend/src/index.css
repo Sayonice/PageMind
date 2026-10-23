@@ -1,0 +1,98 @@
+/* src/index.css
+ *
+ * Tokens de design do PageMind — paleta "biblioteca/acervo":
+ * verde-floresta, papel envelhecido, dourado e vermelho-vinho.
+ * Este arquivo cuida só do global: fontes, cores, reset. O estilo
+ * de cada tela fica em App.css.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  /* Cores base (fundo e texto continuam em tom de papel envelhecido) */
+  --cor-fundo: #ffffff;
+  --cor-superficie: #f7f2e7;
+  --cor-texto: #211d18;
+  --cor-texto-suave: #6b6255;
+  --cor-borda: #d8cbb0;
+
+  /* Acentos: paleta "Crepúsculo Vívido" */
+  --cor-primaria: #10002b;        /* navbar, painel escuro */
+  --cor-primaria-clara: #3c096c;  /* hover sobre fundo escuro */
+
+  --cor-acento: #7b2cbf;          /* botões, links */
+  --cor-acento-escuro: #5a189a;   /* hover de botões/links */
+
+  --cor-destaque: #5a189a;        /* nota/avaliação */
+
+  /* Tipografia */
+  --fonte-display: 'Fraunces', Georgia, serif;
+  --fonte-corpo: 'Inter', system-ui, sans-serif;
+
+  /* Escala de fonte (ver Configurações) — 1 = tamanho padrão */
+  --escala-fonte: 1;
+}
+
+/* Tema escuro (opcional, escolhido em Configurações) */
+[data-theme='escuro'] {
+  --cor-fundo: #1a1625;
+  --cor-superficie: #241b35;
+  --cor-texto: #ede6d6;
+  --cor-texto-suave: #b4a9c2;
+  --cor-borda: #3c096c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-family: var(--fonte-corpo);
+  font-size: calc(16px * var(--escala-fonte));
+  line-height: 1.5;
+}
+
+/* "Sem animações" (Configurações): remove transições em toda a UI */
+body.sem-animacoes * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* "Visualização compacta" (Configurações): reduz espaçamentos dos
+   contêineres mais comuns, sem precisar tocar no CSS de cada página */
+body.layout-compacto .card-resenha,
+body.layout-compacto .card-biblioteca,
+body.layout-compacto .secao-config,
+body.layout-compacto main {
+  padding: 12px !important;
+}
+
+body.layout-compacto .lista-resenhas,
+body.layout-compacto .grade-livros-destaque,
+body.layout-compacto .grade-biblioteca {
+  gap: 10px !important;
+}
+
+h1, h2, h3 {
+  font-family: var(--fonte-display);
+  font-weight: 600;
+  margin: 0 0 0.5em;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--cor-acento-escuro);
+}
+
+button {
+  font-family: var(--fonte-corpo);
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}

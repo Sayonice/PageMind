@@ -1,0 +1,219 @@
+/* src/pages/Biblioteca.css */
+
+.cabecalho-biblioteca {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.cabecalho-biblioteca h1 {
+  font-size: 1.75rem;
+  margin-bottom: 4px;
+}
+
+.cabecalho-biblioteca p {
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.cabecalho-biblioteca .botao-primario {
+  white-space: nowrap;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+.painel-busca-biblioteca {
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.painel-busca-biblioteca form {
+  flex-direction: row;
+  margin-bottom: 16px;
+}
+
+.painel-busca-biblioteca form label {
+  flex: 1;
+}
+
+.lista-resultados-livro {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.card-resultado-biblioteca {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.card-resultado-biblioteca img {
+  width: 44px;
+  height: 64px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.card-resultado-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-resultado-info strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.card-resultado-info p {
+  margin: 2px 0 0;
+  color: var(--cor-texto-suave);
+  font-size: 0.8rem;
+}
+
+.card-resultado-acoes {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.card-resultado-acoes button {
+  background: transparent;
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.card-resultado-acoes button:hover {
+  border-color: var(--cor-acento);
+  color: var(--cor-acento);
+}
+
+.abas-biblioteca {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.abas-biblioteca button {
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  color: var(--cor-texto);
+}
+
+.abas-biblioteca button:hover {
+  border-color: var(--cor-acento);
+}
+
+.abas-biblioteca button.aba-ativa {
+  background-color: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: var(--cor-fundo);
+}
+
+.grade-biblioteca {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.card-biblioteca {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.card-biblioteca img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.card-biblioteca strong {
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.card-biblioteca-autor {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+}
+
+.card-biblioteca-genero {
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  color: var(--cor-acento);
+}
+
+.selo-status {
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+  color: var(--cor-fundo);
+}
+
+.selo-quero_ler {
+  background-color: var(--cor-texto-suave);
+}
+
+.selo-lendo {
+  background-color: var(--cor-acento);
+}
+
+.selo-lido {
+  background-color: var(--cor-primaria-clara);
+}
+
+.barra-progresso {
+  background-color: var(--cor-fundo);
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  height: 8px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.barra-progresso-preenchida {
+  height: 100%;
+  background-color: var(--cor-acento);
+  border-radius: 999px;
+}
+
+.texto-progresso {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.7rem;
+  color: var(--cor-texto-suave);
+}
+
+.seletor-status {
+  margin-top: 12px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}

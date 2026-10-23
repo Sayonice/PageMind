@@ -1,0 +1,76 @@
+/* src/styles/formularios.css
+ *
+ * Estilo de formulário compartilhado entre Login, Cadastro e Nova Resenha.
+ */
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--cor-texto-suave);
+}
+
+input,
+select,
+textarea {
+  font-family: var(--fonte-corpo);
+  font-size: 1rem;
+  color: var(--cor-texto);
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  padding: 10px 12px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--cor-acento);
+  outline-offset: 1px;
+}
+
+textarea {
+  resize: vertical;
+  font-family: var(--fonte-corpo);
+}
+
+button[type='submit'],
+.botao-primario {
+  background-color: var(--cor-acento);
+  color: var(--cor-fundo);
+  border: none;
+  border-radius: 4px;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+button[type='submit']:hover,
+.botao-primario:hover {
+  background-color: var(--cor-acento-escuro);
+}
+
+button[type='submit']:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mensagem-erro {
+  color: var(--cor-destaque);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.mensagem-sucesso {
+  color: var(--cor-primaria-clara);
+  font-size: 0.9rem;
+  margin: 0;
+}

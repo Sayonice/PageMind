@@ -1,0 +1,334 @@
+/* src/components/Navbar.css */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 1.5rem;
+  background-color: var(--cor-primaria, #240046);
+  color: #f1e9ff;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #f8f4ff;
+  text-decoration: none;
+  font-family: var(--fonte-display, serif);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.01em;
+}
+
+.navbar-acoes {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.6rem;
+}
+
+/* O seletor ".navbar-acoes .navbar-icone" (mais específico) + !important
+   garante que isso vence qualquer estilo global de <button> do projeto
+   (o que estava deixando o botão da lupa com fundo roxo sólido). */
+.navbar-acoes .navbar-icone {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px;
+  border-radius: 50% !important;
+  color: #e4d4ff !important;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: none !important;
+}
+
+.navbar-acoes .navbar-icone svg {
+  display: block;
+  pointer-events: none;
+}
+
+.navbar-acoes .navbar-icone:hover {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.navbar-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.navbar-busca {
+  position: relative;
+}
+
+.navbar-busca-form {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.2rem;
+}
+
+.navbar-busca-input {
+  width: 0;
+  padding: 0;
+  margin: 0;
+  border: 1px solid transparent;
+  opacity: 0;
+  background-color: transparent;
+  color: #fff;
+  font-size: 0.9rem;
+  border-radius: 999px;
+  transition: width 0.2s ease, opacity 0.2s ease, padding 0.2s ease,
+    background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.navbar-busca-form-aberta .navbar-busca-input {
+  width: 190px;
+  padding: 0.4rem 0.8rem;
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.navbar-busca-input::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.navbar-busca-input:focus {
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.navbar-busca-form .navbar-busca-fechar {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 22px !important;
+  height: 22px !important;
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  color: #e4d4ff !important;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 50% !important;
+  flex-shrink: 0;
+  box-shadow: none !important;
+}
+
+.navbar-busca-form .navbar-busca-fechar:hover {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.navbar-busca-painel {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: -0.5rem;
+  width: 300px;
+  max-width: calc(100vw - 2rem);
+  background-color: #fffdfa;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(16, 0, 43, 0.28);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.navbar-busca-painel input {
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid #d8c6ef;
+  font-size: 0.9rem;
+}
+
+.navbar-busca-painel input:focus {
+  outline: none;
+  border-color: var(--cor-acento, #7b2cbf);
+}
+
+.navbar-busca-status {
+  color: #8a76a3;
+  font-size: 0.85rem;
+  text-align: center;
+  margin: 0.2rem 0;
+}
+
+.navbar-busca-erro {
+  color: #b8245c;
+}
+
+.navbar-busca-resultados {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.navbar-busca-resultados li a {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--cor-primaria, #3c096c);
+}
+
+.navbar-busca-resultados li a:hover {
+  background-color: #f3e8ff;
+}
+
+.navbar-busca-resultados img {
+  width: 34px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+  background-color: #e7d9f7;
+}
+
+.navbar-busca-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.navbar-busca-info strong {
+  font-size: 0.88rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navbar-busca-info small {
+  font-size: 0.75rem;
+  color: #8a76a3;
+}
+
+:root[data-theme='escuro'] .navbar-busca-painel {
+  background-color: #1c0b33;
+}
+
+:root[data-theme='escuro'] .navbar-busca-resultados li a {
+  color: #f1e9ff;
+}
+
+:root[data-theme='escuro'] .navbar-busca-resultados li a:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.navbar-menu {
+  position: relative;
+}
+
+.navbar-menu .navbar-hamburguer {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  border: none !important;
+  background: transparent !important;
+  color: #e4d4ff !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  box-shadow: none !important;
+}
+
+.navbar-menu .navbar-hamburguer:hover {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.navbar-dropdown {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 210px;
+  background-color: #fffdfa;
+  color: var(--cor-primaria, #3c096c);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(16, 0, 43, 0.28);
+  overflow: hidden;
+  padding: 0.4rem 0;
+}
+
+.navbar-dropdown a,
+.navbar-dropdown-sair {
+  padding: 0.65rem 1.1rem;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.92rem;
+  font-family: var(--fonte-corpo, sans-serif);
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.navbar-dropdown a:hover,
+.navbar-dropdown-sair:hover {
+  background-color: #f3e8ff;
+}
+
+.navbar-dropdown hr {
+  border: none;
+  border-top: 1px solid #ece0ff;
+  margin: 0.35rem 0;
+}
+
+.navbar-dropdown-sair {
+  color: #b8245c;
+  font-weight: 600;
+}
+
+/* Tema escuro */
+:root[data-theme='escuro'] .navbar-dropdown {
+  background-color: #1c0b33;
+  color: #f1e9ff;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme='escuro'] .navbar-dropdown a:hover,
+:root[data-theme='escuro'] .navbar-dropdown-sair:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme='escuro'] .navbar-dropdown hr {
+  border-top-color: rgba(255, 255, 255, 0.15);
+}

@@ -1,0 +1,148 @@
+/* src/pages/Estatisticas.css */
+
+.pagina-estatisticas h1 {
+  font-size: 1.75rem;
+  margin-bottom: 4px;
+}
+
+.subtitulo-estatisticas {
+  color: var(--cor-texto-suave);
+  font-size: 0.9rem;
+  margin: 0 0 28px;
+}
+
+.grade-cartoes-estatisticas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.cartao-estatistica {
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  padding: 20px;
+  text-align: center;
+}
+
+.cartao-estatistica-icone {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.cartao-estatistica strong {
+  display: block;
+  font-size: 1.75rem;
+  font-family: var(--fonte-display);
+  color: var(--cor-primaria-clara);
+}
+
+.cartao-estatistica p {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+}
+
+.secao-estatisticas {
+  margin-bottom: 32px;
+}
+
+.secao-estatisticas h2 {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
+.barras-generos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.linha-barra-genero {
+  display: grid;
+  grid-template-columns: 140px 1fr 40px;
+  align-items: center;
+  gap: 12px;
+}
+
+.rotulo-barra-genero {
+  font-size: 0.85rem;
+}
+
+.barra-genero {
+  background-color: var(--cor-fundo);
+  border: 1px solid var(--cor-borda);
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.barra-genero-preenchida {
+  height: 100%;
+  background-color: var(--cor-acento);
+  border-radius: 999px;
+}
+
+.percentual-barra-genero {
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+  text-align: right;
+}
+
+.lista-livros-concluidos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-livro-concluido {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  padding: 14px 16px;
+}
+
+.item-livro-concluido img {
+  width: 44px;
+  height: 64px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.item-livro-concluido > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-livro-concluido strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.item-livro-concluido p {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+}
+
+.genero-livro-concluido {
+  color: var(--cor-acento) !important;
+}
+
+.item-livro-concluido .estrelas {
+  margin: 4px 0 0;
+}
+
+.paginas-livro-concluido {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+}
