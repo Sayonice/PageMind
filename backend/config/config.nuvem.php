@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'host'    => 'COLE_O_HOST_DO_AIVEN',
+    'host'    => 'pagemind-pagemind.a.aivencloud.com',
     'porta'   => 28940,
     'banco'   => 'pagemind',
     'usuario' => 'avnadmin',
-    'senha'   => 'COLE_A_SENHA_DO_AIVEN',
+    'senha'   => 'AVNS_Z8XooIaHFNnKwiQ289D',
     'ssl_ca'  => __DIR__ . '/ca.pem',
 ];
