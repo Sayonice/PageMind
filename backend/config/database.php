@@ -1,18 +1,21 @@
 <?php
-/**
- * Conexão com o banco de dados MySQL via PDO.
- * Ajuste as credenciais conforme o ambiente (local ou AWS EC2).
- */
 
 function conectarBanco(): PDO
 {
-    $host   = 'localhost';
-    $dbname = 'pagemind';
-    $user   = 'root';
-    $senha  = 'Yuna.135';
-    $charset = 'utf8mb4';
+    $arquivoConfig = __DIR__ . '/config.php';
 
-    $dsn = "mysql:host={$host};dbname={$dbname};charset={$charset}";
+    if (!file_exists($arquivoConfig)) {
+        http_response_code(500);
+        echo json_encode([
+            'sucesso' => false,
+            'mensagem' => 'Arquivo config.php não encontrado. Copie config.local.php ou config.nuvem.php para config.php.'
+        ]);
+        exit;
+    }
+
+    $config = require $arquivoConfig;
+
+    $dsn = "mysql:host={$config['host']};port={$config['porta']};dbname={$config['banco']};charset=utf8mb4";
 
     $opcoes = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -20,8 +23,12 @@ function conectarBanco(): PDO
         PDO::ATTR_EMULATE_PREPARES   => false,
     ];
 
+    if (!empty($config['ssl_ca'])) {
+        $opcoes[PDO::MYSQL_ATTR_SSL_CA] = $config['ssl_ca'];
+    }
+
     try {
-        return new PDO($dsn, $user, $senha, $opcoes);
+        return new PDO($dsn, $config['usuario'], $config['senha'], $opcoes);
     } catch (PDOException $e) {
         http_response_code(500);
         echo json_encode([
