@@ -1,5 +1,3 @@
-// src/App.jsx
-
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
@@ -16,10 +14,7 @@ import Configuracoes from './pages/Configuracoes';
 import LivroDetalhe from './pages/LivroDetalhe';
 import PainelProfessor from './pages/PainelProfessor';
 
-
 export default function App() {
-  // Aplica tema/tipografia/layout salvos (ver Configurações) assim que o
-  // app carrega, pra pessoa não ver o tema padrão piscar antes do dela.
   useEffect(() => {
     aplicarConfiguracoes();
   }, []);

@@ -1,5 +1,3 @@
-// src/utils/formatacao.js
-
 export function tempoRelativo(dataIso) {
   const diffMs = Date.now() - new Date(dataIso).getTime();
   const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -24,9 +22,6 @@ export function iniciais(nomeCompleto) {
   return (primeira + ultima).toUpperCase();
 }
 
-// Paleta fixa (variações dentro do tom "Crepúsculo Vívido") para os avatares,
-// escolhida de forma determinística a partir do nome — a mesma pessoa
-// sempre cai na mesma cor.
 const CORES_AVATAR = ['#5A189A', '#7B2CBF', '#9D4EDD', '#3C096C'];
 
 export function corAvatar(nomeCompleto) {
@@ -35,6 +30,6 @@ export function corAvatar(nomeCompleto) {
 }
 
 export function estrelas(nota) {
-  const notaArredondada = Math.round(nota);
-  return '★'.repeat(notaArredondada) + '☆'.repeat(5 - notaArredondada);
+  const cheias = Math.max(0, Math.min(5, Math.round(Number(nota) || 0)));
+  return '★'.repeat(cheias) + '☆'.repeat(5 - cheias);
 }

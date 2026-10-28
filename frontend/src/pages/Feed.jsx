@@ -1,5 +1,3 @@
-// src/pages/Feed.jsx
-
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -13,7 +11,35 @@ import { tempoRelativo, iniciais, corAvatar, estrelas } from '../utils/formataca
 import { traduzirGenero } from '../utils/generos';
 import { useAuth } from '../context/useAuth';
 import Comentarios from '../components/Comentarios';
+import { IconeCoracao, IconeLixeira } from '../components/Icones';
 import './Feed.css';
+
+const ORDENACOES = [
+  { valor: 'recentes', rotulo: 'Mais recentes' },
+  { valor: 'curtidas', rotulo: 'Mais curtidas' },
+];
+
+function GradeLivros({ livros }) {
+  return (
+    <div className="grade-livros-destaque">
+      {livros.map((livro) => (
+        <Link key={livro.id_livro} to={`/livro/${livro.id_livro}`} className="card-livro">
+          {livro.imagem_capa ? (
+            <img src={livro.imagem_capa} alt={`Capa de ${livro.titulo}`} />
+          ) : (
+            <div className="card-livro-sem-capa" />
+          )}
+          <strong>{livro.titulo}</strong>
+          <span className="card-livro-autor">{livro.autor}</span>
+          <span className="estrelas">
+            {estrelas(livro.nota_media)}{' '}
+            <span className="card-livro-total">({livro.total_resenhas})</span>
+          </span>
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 export default function Feed() {
   const { usuario } = useAuth();
@@ -22,9 +48,11 @@ export default function Feed() {
   const [recomendacoes, setRecomendacoes] = useState([]);
   const [generosRecomendacao, setGenerosRecomendacao] = useState([]);
   const [carregando, setCarregando] = useState(true);
-  const [erro, setErro] = useState('');
+  const [erroCarregamento, setErroCarregamento] = useState('');
+  const [erroAcao, setErroAcao] = useState('');
 
   const [generoAtivo, setGeneroAtivo] = useState('Todos');
+  const [ordem, setOrdem] = useState('recentes');
 
   useEffect(() => {
     Promise.all([listarResenhas(), listarLivrosDestaque(), buscarRecomendacoes()])
@@ -34,145 +62,107 @@ export default function Feed() {
         setRecomendacoes(recomendacoesCarregadas.livros);
         setGenerosRecomendacao(recomendacoesCarregadas.baseado_em_generos);
       })
-      .catch((erroCapturado) => setErro(erroCapturado.message))
+      .catch((erroCapturado) => setErroCarregamento(erroCapturado.message))
       .finally(() => setCarregando(false));
   }, []);
 
-  // Traduz o gênero de cada resenha (cobre inclusive as que já estavam
-  // salvas em inglês, de antes da tradução existir).
   const resenhasTraduzidas = useMemo(
     () => resenhas.map((r) => ({ ...r, genero: traduzirGenero(r.genero) })),
     [resenhas]
   );
 
-  // Gêneros disponíveis: calculados a partir das resenhas que já temos,
-  // então a lista de filtros nunca fica desatualizada com os dados reais.
   const generos = useMemo(() => {
-    const encontrados = new Set(
-      resenhasTraduzidas.map((r) => r.genero).filter(Boolean)
-    );
+    const encontrados = new Set(resenhasTraduzidas.map((r) => r.genero).filter(Boolean));
     return ['Todos', ...encontrados];
   }, [resenhasTraduzidas]);
 
-  const resenhasFiltradas =
-    generoAtivo === 'Todos'
-      ? resenhasTraduzidas
-      : resenhasTraduzidas.filter((r) => r.genero === generoAtivo);
+  const resenhasExibidas = useMemo(() => {
+    const filtradas =
+      generoAtivo === 'Todos'
+        ? resenhasTraduzidas
+        : resenhasTraduzidas.filter((r) => r.genero === generoAtivo);
+
+    if (ordem === 'curtidas') {
+      return [...filtradas].sort((a, b) => b.total_curtidas - a.total_curtidas);
+    }
+    return filtradas;
+  }, [resenhasTraduzidas, generoAtivo, ordem]);
 
   async function handleCurtir(idResenha) {
+    setErroAcao('');
     try {
       const resultado = await curtirResenha(idResenha);
       setResenhas((atual) =>
         atual.map((r) =>
           r.id_resenha === idResenha
-            ? {
-                ...r,
-                curtida_usuario: resultado.curtiu,
-                total_curtidas: resultado.total_curtidas,
-              }
+            ? { ...r, curtida_usuario: resultado.curtiu, total_curtidas: resultado.total_curtidas }
             : r
         )
       );
-    } catch {
-      // Falha silenciosa é aceitável aqui: o botão simplesmente não muda
-      // de estado, e a pessoa pode tentar de novo.
+    } catch (erroCapturado) {
+      setErroAcao(erroCapturado.message);
     }
   }
 
   async function handleExcluir(idResenha) {
-    const confirmou = window.confirm(
-      'Excluir esta resenha? Essa ação não pode ser desfeita.'
-    );
-    if (!confirmou) return;
+    if (!window.confirm('Excluir esta resenha? Essa ação não pode ser desfeita.')) return;
 
+    setErroAcao('');
     try {
       await excluirResenha(idResenha);
       setResenhas((atual) => atual.filter((r) => r.id_resenha !== idResenha));
     } catch (erroCapturado) {
-      setErro(erroCapturado.message);
+      setErroAcao(erroCapturado.message);
     }
   }
 
   if (carregando) return <p>Carregando resenhas...</p>;
-  if (erro) return <p className="mensagem-erro">{erro}</p>;
+  if (erroCarregamento) return <p className="mensagem-erro">{erroCarregamento}</p>;
+
+  const totalResenhas = resenhas.length;
 
   return (
     <div className="pagina-feed">
       {recomendacoes.length > 0 && (
-        <section className="secao-recomendacoes">
+        <section>
           <h2>Recomendados pra você</h2>
-          <p className="subtitulo-recomendacoes">
+          <p className="subtitulo-secao">
             {generosRecomendacao.length > 0
-              ? `Baseado no seu gosto por ${generosRecomendacao
-                  .map(traduzirGenero)
-                  .join(', ')}.`
+              ? `Baseado no seu gosto por ${generosRecomendacao.map(traduzirGenero).join(', ')}.`
               : 'Livros bem avaliados pela comunidade pra você começar por aqui.'}
           </p>
-          <div className="grade-livros-destaque">
-            {recomendacoes.map((livro) => (
-              <Link
-                key={livro.id_livro}
-                to={`/livro/${livro.id_livro}`}
-                className="card-livro-destaque"
-              >
-                {livro.imagem_capa && (
-                  <img src={livro.imagem_capa} alt={`Capa de ${livro.titulo}`} />
-                )}
-                <strong>{livro.titulo}</strong>
-                <p>{livro.autor}</p>
-                <p className="card-livro-destaque-nota">
-                  <span className="estrelas">{estrelas(livro.nota_media)}</span>{' '}
-                  ({livro.total_resenhas})
-                </p>
-              </Link>
-            ))}
-          </div>
+          <GradeLivros livros={recomendacoes} />
         </section>
       )}
 
       {livrosDestaque.length > 0 && (
-        <section className="secao-destaque">
+        <section>
           <h2>Livros em destaque</h2>
-          <div className="grade-livros-destaque">
-            {livrosDestaque.map((livro) => (
-              <Link
-                key={livro.id_livro}
-                to={`/livro/${livro.id_livro}`}
-                className="card-livro-destaque"
-              >
-                {livro.imagem_capa && (
-                  <img src={livro.imagem_capa} alt={`Capa de ${livro.titulo}`} />
-                )}
-                <strong>{livro.titulo}</strong>
-                <p>{livro.autor}</p>
-                <p className="card-livro-destaque-nota">
-                  <span className="estrelas">{estrelas(livro.nota_media)}</span>{' '}
-                  ({livro.total_resenhas})
-                </p>
-              </Link>
-            ))}
-          </div>
+          <GradeLivros livros={livrosDestaque} />
         </section>
       )}
 
-      <section className="secao-resenhas">
+      <section>
         <div className="cabecalho-resenhas">
           <div>
-            <span className="rotulo-comunidade">Comunidade</span>
+            <span className="rotulo-secao">Comunidade</span>
             <h1>Resenhas</h1>
-            <p>{resenhas.length} resenhas publicadas pela comunidade PageMind.</p>
+            <p>
+              {totalResenhas} {totalResenhas === 1 ? 'resenha publicada' : 'resenhas publicadas'}{' '}
+              pela comunidade PageMind.
+            </p>
           </div>
           <Link to="/nova-resenha" className="botao-primario">
             + Escrever resenha
           </Link>
         </div>
 
-        <div className="filtros-genero">
+        <div className="chips">
           {generos.map((genero) => (
             <button
               key={genero}
               type="button"
-              className={genero === generoAtivo ? 'filtro-ativo' : ''}
+              className={genero === generoAtivo ? 'chip chip-ativo' : 'chip'}
               onClick={() => setGeneroAtivo(genero)}
             >
               {genero}
@@ -180,13 +170,28 @@ export default function Feed() {
           ))}
         </div>
 
-        {resenhasFiltradas.length === 0 ? (
-          <p>Nenhuma resenha encontrada nesse gênero ainda.</p>
+        <div className="abas-ordenacao">
+          {ORDENACOES.map((opcao) => (
+            <button
+              key={opcao.valor}
+              type="button"
+              className={opcao.valor === ordem ? 'aba-ativa' : ''}
+              onClick={() => setOrdem(opcao.valor)}
+            >
+              {opcao.rotulo}
+            </button>
+          ))}
+        </div>
+
+        {erroAcao && <p className="mensagem-erro">{erroAcao}</p>}
+
+        {resenhasExibidas.length === 0 ? (
+          <p className="feed-vazio">Nenhuma resenha encontrada nesse gênero ainda.</p>
         ) : (
           <ul className="lista-resenhas">
-            {resenhasFiltradas.map((resenha) => (
+            {resenhasExibidas.map((resenha) => (
               <li key={resenha.id_resenha} className="card-resenha">
-                <Link to={`/livro/${resenha.id_livro}`}>
+                <Link to={`/livro/${resenha.id_livro}`} className="card-resenha-capa">
                   {resenha.imagem_capa && (
                     <img src={resenha.imagem_capa} alt={`Capa de ${resenha.titulo_livro}`} />
                   )}
@@ -195,49 +200,54 @@ export default function Feed() {
                 <div className="card-resenha-conteudo">
                   <div className="card-resenha-cabecalho">
                     <p className="card-resenha-livro">
-                      <Link to={`/livro/${resenha.id_livro}`} className="link-livro-resenha">
-                        <strong>{resenha.titulo_livro}</strong>
-                      </Link>{' '}
-                      — {resenha.autor_livro}
+                      <Link to={`/livro/${resenha.id_livro}`}>{resenha.titulo_livro}</Link>
+                      {' — '}
+                      <span>{resenha.autor_livro}</span>
                     </p>
-                    <span className="card-resenha-tempo">
-                      {tempoRelativo(resenha.data)}
-                    </span>
+                    <span className="card-resenha-tempo">{tempoRelativo(resenha.data)}</span>
                   </div>
 
-                  <p className="estrelas">{estrelas(resenha.nota)}</p>
+                  <span className="estrelas">{estrelas(resenha.nota)}</span>
 
                   <h2>{resenha.titulo_resenha}</h2>
                   <p className="card-resenha-texto">{resenha.texto}</p>
 
-                  <div className="card-resenha-autor">
-                    <span
-                      className="avatar"
-                      style={{ backgroundColor: corAvatar(resenha.nome_usuario) }}
-                    >
-                      {iniciais(resenha.nome_usuario)}
-                    </span>
-                    {resenha.nome_usuario}
-                  </div>
+                  <div className="card-resenha-rodape">
+                    <div className="card-resenha-autor">
+                      <span
+                        className="avatar"
+                        style={{ backgroundColor: corAvatar(resenha.nome_usuario) }}
+                      >
+                        {iniciais(resenha.nome_usuario)}
+                      </span>
+                      {resenha.nome_usuario}
+                    </div>
 
-                  <div className="card-resenha-acoes">
-                    <button
-                      type="button"
-                      className={resenha.curtida_usuario ? 'botao-curtir ativo' : 'botao-curtir'}
-                      onClick={() => handleCurtir(resenha.id_resenha)}
-                    >
-                      {resenha.curtida_usuario ? '❤️' : '🤍'} {resenha.total_curtidas}
-                    </button>
-
-                    {usuario?.tipo === 'professor' && (
+                    <div className="card-resenha-acoes">
                       <button
                         type="button"
-                        className="botao-excluir"
-                        onClick={() => handleExcluir(resenha.id_resenha)}
+                        className={
+                          resenha.curtida_usuario
+                            ? 'botao-acao botao-curtir ativo'
+                            : 'botao-acao botao-curtir'
+                        }
+                        onClick={() => handleCurtir(resenha.id_resenha)}
                       >
-                        🗑️ Excluir
+                        <IconeCoracao tamanho={16} preenchido={Boolean(resenha.curtida_usuario)} />
+                        {resenha.total_curtidas}
                       </button>
-                    )}
+
+                      {usuario?.tipo === 'professor' && (
+                        <button
+                          type="button"
+                          className="botao-acao botao-excluir"
+                          onClick={() => handleExcluir(resenha.id_resenha)}
+                        >
+                          <IconeLixeira tamanho={16} />
+                          Excluir
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <Comentarios

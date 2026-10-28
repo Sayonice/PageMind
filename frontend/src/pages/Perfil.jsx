@@ -1,5 +1,3 @@
-// src/pages/Perfil.jsx
-
 import { useEffect, useState } from 'react';
 import { buscarPerfil, atualizarPerfil } from '../services/api';
 import { iniciais, corAvatar, estrelas, tempoRelativo } from '../utils/formatacao';
@@ -21,7 +19,6 @@ export default function Perfil() {
   }, []);
 
   function carregar() {
-    setCarregando(true);
     buscarPerfil()
       .then((resposta) => {
         setDados(resposta);
@@ -54,8 +51,8 @@ export default function Perfil() {
 
   return (
     <div className="pagina-perfil">
-      <div className="cabecalho-perfil">
-        <span className="avatar avatar-grande" style={{ backgroundColor: corAvatar(usuario.nome) }}>
+      <section className="cabecalho-perfil">
+        <span className="avatar-perfil" style={{ backgroundColor: corAvatar(usuario.nome) }}>
           {iniciais(usuario.nome)}
         </span>
 
@@ -68,13 +65,13 @@ export default function Perfil() {
           {usuario.bio && !editando && <p className="perfil-bio">{usuario.bio}</p>}
         </div>
 
-        <button type="button" onClick={() => setEditando((v) => !v)}>
+        <button type="button" className="botao-editar-perfil" onClick={() => setEditando((v) => !v)}>
           {editando ? 'Cancelar' : 'Editar perfil'}
         </button>
-      </div>
+      </section>
 
       {editando && (
-        <form onSubmit={handleSalvar} className="form-editar-perfil">
+        <form onSubmit={handleSalvar} className="painel form-editar-perfil">
           <label>
             Nome
             <input
@@ -110,48 +107,50 @@ export default function Perfil() {
         </div>
       </div>
 
-      {estatisticas.generos_favoritos.length > 0 && (
-        <section className="secao-perfil">
-          <h2>Gêneros favoritos</h2>
-          <div className="barras-generos">
-            {estatisticas.generos_favoritos.map((item) => (
-              <div key={item.genero} className="linha-barra-genero">
-                <span className="rotulo-barra-genero">{traduzirGenero(item.genero)}</span>
-                <div className="barra-genero">
-                  <div className="barra-genero-preenchida" style={{ width: `${item.percentual}%` }} />
-                </div>
-                <span className="percentual-barra-genero">{item.percentual}%</span>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <section className="secao-perfil">
-        <h2>Minhas resenhas</h2>
-        {minhasResenhas.length === 0 ? (
-          <p>Você ainda não publicou nenhuma resenha.</p>
-        ) : (
-          <ul className="lista-resenhas-perfil">
-            {minhasResenhas.map((resenha) => (
-              <li key={resenha.id_resenha} className="card-resenha-perfil">
-                {resenha.imagem_capa && (
-                  <img src={resenha.imagem_capa} alt={`Capa de ${resenha.livro_titulo}`} />
-                )}
-                <div>
-                  <div className="card-resenha-perfil-cabecalho">
-                    <strong>{resenha.titulo}</strong>
-                    <span>{tempoRelativo(resenha.data)}</span>
+      <div className="colunas-perfil">
+        <section className="secao-resenhas-perfil">
+          <h2>Minhas resenhas</h2>
+          {minhasResenhas.length === 0 ? (
+            <p className="painel">Você ainda não publicou nenhuma resenha.</p>
+          ) : (
+            <ul className="lista-resenhas-perfil">
+              {minhasResenhas.map((resenha) => (
+                <li key={resenha.id_resenha} className="painel card-resenha-perfil">
+                  {resenha.imagem_capa && (
+                    <img src={resenha.imagem_capa} alt={`Capa de ${resenha.livro_titulo}`} />
+                  )}
+                  <div className="card-resenha-perfil-corpo">
+                    <div className="card-resenha-perfil-cabecalho">
+                      <strong>{resenha.titulo}</strong>
+                      <span>{tempoRelativo(resenha.data)}</span>
+                    </div>
+                    <p className="card-resenha-perfil-livro">{resenha.livro_titulo}</p>
+                    <p className="estrelas">{estrelas(resenha.nota)}</p>
+                    <p className="card-resenha-perfil-texto">{resenha.texto}</p>
                   </div>
-                  <p className="estrelas">{estrelas(resenha.nota)}</p>
-                  <p className="card-resenha-perfil-livro">{resenha.livro_titulo}</p>
-                  <p className="card-resenha-perfil-texto">{resenha.texto}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        {estatisticas.generos_favoritos.length > 0 && (
+          <aside className="painel painel-generos-perfil">
+            <h2>Gêneros favoritos</h2>
+            <div className="barras-generos">
+              {estatisticas.generos_favoritos.map((item) => (
+                <div key={item.genero} className="linha-barra-genero">
+                  <span>{traduzirGenero(item.genero)}</span>
+                  <div className="barra-genero">
+                    <div className="barra-genero-preenchida" style={{ width: `${item.percentual}%` }} />
+                  </div>
+                  <span>{item.percentual}%</span>
                 </div>
-              </li>
-            ))}
-          </ul>
+              ))}
+            </div>
+          </aside>
         )}
-      </section>
+      </div>
     </div>
   );
 }

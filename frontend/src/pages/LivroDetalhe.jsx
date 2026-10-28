@@ -1,5 +1,3 @@
-// src/pages/LivroDetalhe.jsx
-
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { buscarDetalhesLivro, curtirResenha, excluirResenha } from '../services/api';
@@ -7,11 +5,16 @@ import { buscarDetalhesGoogleBooks } from '../services/googleBooks';
 import { tempoRelativo, iniciais, corAvatar, estrelas } from '../utils/formatacao';
 import { traduzirGenero } from '../utils/generos';
 import { useAuth } from '../context/useAuth';
+import { IconeSeta, IconeCoracao, IconeLixeira } from '../components/Icones';
 import Comentarios from '../components/Comentarios';
 import './LivroDetalhe.css';
 
 export default function LivroDetalhe() {
   const { id } = useParams();
+  return <ConteudoLivro key={id} id={id} />;
+}
+
+function ConteudoLivro({ id }) {
   const { usuario } = useAuth();
 
   const [livro, setLivro] = useState(null);
@@ -21,19 +24,11 @@ export default function LivroDetalhe() {
   const [erro, setErro] = useState('');
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- precisa
-    // resetar o estado de carregamento toda vez que o id do livro muda,
-    // antes de disparar a busca.
-    setCarregando(true);
-    setErro('');
-
     buscarDetalhesLivro(id)
       .then((resposta) => {
         setLivro(resposta.livro);
         setResenhas(resposta.resenhas);
 
-        // Busca sinopse/editora na Google Books em paralelo — se falhar,
-        // a página continua funcionando normalmente, só sem essa parte.
         buscarDetalhesGoogleBooks({
           googleBooksId: resposta.livro.google_books_id,
           titulo: resposta.livro.titulo,
@@ -57,15 +52,12 @@ export default function LivroDetalhe() {
         )
       );
     } catch {
-      // Falha silenciosa é aceitável aqui, igual no Feed.
+      setErro('Não foi possível curtir a resenha.');
     }
   }
 
   async function handleExcluir(idResenha) {
-    const confirmou = window.confirm(
-      'Excluir esta resenha? Essa ação não pode ser desfeita.'
-    );
-    if (!confirmou) return;
+    if (!window.confirm('Excluir esta resenha? Essa ação não pode ser desfeita.')) return;
 
     try {
       await excluirResenha(idResenha);
@@ -76,23 +68,19 @@ export default function LivroDetalhe() {
   }
 
   if (carregando) return <p>Carregando livro...</p>;
-  if (erro) return <p className="mensagem-erro">{erro}</p>;
-  if (!livro) return null;
+  if (!livro) return <p className="mensagem-erro">{erro}</p>;
+
+  const capa = extras?.capaGrande || livro.imagem_capa;
 
   return (
     <div className="pagina-livro-detalhe">
       <Link to="/feed" className="link-voltar">
-        ← Voltar ao feed
+        <IconeSeta tamanho={16} />
+        Voltar ao feed
       </Link>
 
-      <div className="cabecalho-livro-detalhe">
-        {(extras?.capaGrande || livro.imagem_capa) && (
-          <img
-            src={extras?.capaGrande || livro.imagem_capa}
-            alt={`Capa de ${livro.titulo}`}
-            className="capa-livro-detalhe"
-          />
-        )}
+      <section className="painel cabecalho-livro-detalhe">
+        {capa && <img src={capa} alt={`Capa de ${livro.titulo}`} className="capa-livro-detalhe" />}
 
         <div className="info-livro-detalhe">
           <h1>{livro.titulo}</h1>
@@ -124,26 +112,24 @@ export default function LivroDetalhe() {
           {extras?.sinopse && <p className="sinopse-livro-detalhe">{extras.sinopse}</p>}
 
           <Link to="/nova-resenha" className="botao-primario">
-            + Escrever resenha
+            Escrever resenha
           </Link>
         </div>
-      </div>
+      </section>
 
       <section className="secao-resenhas-livro">
         <h2>Resenhas desse livro</h2>
+        {erro && <p className="mensagem-erro">{erro}</p>}
 
         {resenhas.length === 0 ? (
           <p>Ninguém resenhou esse livro ainda. Seja a primeira pessoa!</p>
         ) : (
           <ul className="lista-resenhas-livro">
             {resenhas.map((resenha) => (
-              <li key={resenha.id_resenha} className="card-resenha-livro">
+              <li key={resenha.id_resenha} className="painel card-resenha-livro">
                 <div className="card-resenha-livro-cabecalho">
                   <div className="card-resenha-livro-autor">
-                    <span
-                      className="avatar"
-                      style={{ backgroundColor: corAvatar(resenha.nome_usuario) }}
-                    >
+                    <span className="avatar" style={{ backgroundColor: corAvatar(resenha.nome_usuario) }}>
                       {iniciais(resenha.nome_usuario)}
                     </span>
                     <div>
@@ -160,27 +146,26 @@ export default function LivroDetalhe() {
                 <div className="card-resenha-livro-acoes">
                   <button
                     type="button"
-                    className={resenha.curtida_usuario ? 'botao-curtir ativo' : 'botao-curtir'}
+                    className={resenha.curtida_usuario ? 'botao-acao botao-curtir ativo' : 'botao-acao botao-curtir'}
                     onClick={() => handleCurtir(resenha.id_resenha)}
                   >
-                    {resenha.curtida_usuario ? '❤️' : '🤍'} {resenha.total_curtidas}
+                    <IconeCoracao tamanho={16} preenchido={Boolean(resenha.curtida_usuario)} />
+                    {resenha.total_curtidas}
                   </button>
 
                   {usuario?.tipo === 'professor' && (
                     <button
                       type="button"
-                      className="botao-excluir"
+                      className="botao-acao botao-excluir"
                       onClick={() => handleExcluir(resenha.id_resenha)}
                     >
-                      🗑️ Excluir
+                      <IconeLixeira tamanho={16} />
+                      Excluir
                     </button>
                   )}
                 </div>
 
-                <Comentarios
-                  idResenha={resenha.id_resenha}
-                  totalInicial={resenha.total_comentarios}
-                />
+                <Comentarios idResenha={resenha.id_resenha} totalInicial={resenha.total_comentarios} />
               </li>
             ))}
           </ul>

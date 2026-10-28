@@ -1,82 +1,208 @@
-/* src/pages/AuthPages.css
- *
- * Compartilhado entre Login.jsx e Cadastro.jsx: painel escuro à
- * esquerda com a frase de efeito + formulário à direita.
- */
-
 .pagina-auth {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
   min-height: 100vh;
 }
 
 .pagina-auth-painel {
-  background-color: var(--cor-primaria);
-  color: var(--cor-fundo);
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 48px;
-  position: relative;
-  overflow: hidden;
+  padding: 40px 48px;
+  background-color: var(--cor-primaria);
+  color: #ffffff;
+}
+
+.pagina-auth-painel::before,
+.pagina-auth-painel::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .pagina-auth-painel::before {
-  content: '';
-  position: absolute;
-  width: 420px;
-  height: 420px;
-  border-radius: 50%;
-  border: 1px solid rgba(237, 230, 214, 0.15);
-  right: -160px;
-  bottom: -160px;
+  width: 290px;
+  height: 290px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(224, 170, 255, 0.16);
 }
 
-.pagina-auth-marca {
-  font-family: var(--fonte-display);
-  font-size: 1.25rem;
-  font-weight: 600;
+.pagina-auth-painel::after {
+  width: 220px;
+  height: 220px;
+  top: -90px;
+  right: -90px;
+  background-color: rgba(157, 78, 221, 0.14);
+}
+
+.pagina-auth-painel > * {
+  position: relative;
+  z-index: 1;
 }
 
 .pagina-auth-frase {
+  max-width: 440px;
+  margin: 0;
   font-family: var(--fonte-display);
   font-style: italic;
-  font-size: 1.75rem;
-  font-weight: 500;
-  max-width: 320px;
-  line-height: 1.3;
+  font-size: 2.25rem;
+  line-height: 1.2;
+}
+
+.pagina-auth-rodape {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.75rem;
 }
 
 .pagina-auth-conteudo {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 48px;
-  max-width: 420px;
   width: 100%;
+  max-width: 440px;
   margin: 0 auto;
+  padding: 48px 24px;
 }
 
 .pagina-auth-conteudo h1 {
-  font-size: 1.75rem;
+  margin-bottom: 6px;
+  font-family: var(--fonte-display);
+  font-weight: 400;
+  font-size: 2rem;
 }
 
-.pagina-auth-conteudo > p {
-  margin-top: 24px;
+.pagina-auth-subtitulo {
+  margin: 0 0 28px;
   font-size: 0.9rem;
   color: var(--cor-texto-suave);
+}
+
+.pagina-auth-troca {
+  margin: 24px 0 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+}
+
+.pagina-auth-troca a {
+  color: var(--cor-primaria-clara);
+  font-weight: 600;
+}
+
+.campo-auth-rotulo {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cor-texto);
+}
+
+.campo-auth-caixa {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 14px;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  color: var(--cor-texto-suave);
+}
+
+.campo-auth-caixa:focus-within {
+  border-color: var(--cor-acento);
+  box-shadow: 0 0 0 3px rgba(123, 44, 191, 0.15);
+}
+
+.campo-auth-caixa input,
+.campo-auth-caixa select {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.9rem;
+}
+
+.campo-auth-caixa input:focus,
+.campo-auth-caixa select:focus {
+  outline: none;
+}
+
+.campo-auth-olho {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+}
+
+.auth-termos {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  padding-top: 18px;
+  border-top: 1px solid var(--cor-borda);
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.auth-termos input {
+  margin: 2px 0 0;
+  accent-color: var(--cor-acento);
+}
+
+.pagina-auth-conteudo button[type='submit'] {
+  height: 44px;
+  padding: 0;
+  background-color: var(--cor-primaria-clara);
+}
+
+.pagina-auth-conteudo button[type='submit']:hover {
+  background-color: var(--cor-primaria-media);
+}
+
+.pagina-auth-conteudo button[type='submit']:disabled {
+  background-color: var(--cor-borda);
+  color: var(--cor-texto-suave);
+  opacity: 1;
 }
 
 @media (max-width: 720px) {
   .pagina-auth {
     grid-template-columns: 1fr;
+    min-height: auto;
   }
 
   .pagina-auth-painel {
-    padding: 32px;
+    padding: 24px 24px 0;
+    background-color: transparent;
+    color: var(--cor-texto);
   }
 
-  .pagina-auth-painel::before {
+  .pagina-auth-painel::before,
+  .pagina-auth-painel::after,
+  .pagina-auth-frase,
+  .pagina-auth-rodape {
     display: none;
+  }
+
+  .pagina-auth-painel .logo-pagemind-icone {
+    background-color: rgba(123, 44, 191, 0.14);
+    color: var(--cor-acento);
+  }
+
+  .pagina-auth-conteudo {
+    justify-content: flex-start;
+    padding-top: 32px;
   }
 }

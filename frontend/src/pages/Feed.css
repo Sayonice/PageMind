@@ -1,167 +1,147 @@
-/* src/pages/Feed.css */
-
-.secao-destaque,
-.secao-recomendacoes {
-  margin-bottom: 40px;
+.pagina-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
-.secao-destaque h2,
-.secao-recomendacoes h2 {
-  font-size: 1.1rem;
+.pagina-feed h2 {
+  font-size: 1.05rem;
   margin-bottom: 4px;
 }
 
-.subtitulo-recomendacoes {
-  margin: 0 0 16px;
+.subtitulo-secao {
+  margin: 0;
   font-size: 0.85rem;
   color: var(--cor-texto-suave);
 }
 
 .grade-livros-destaque {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+  margin-top: 14px;
 }
 
-.card-livro-destaque {
-  display: block;
-  text-decoration: none;
+.card-livro {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   color: inherit;
-  transition: transform 0.15s ease;
+  text-decoration: none;
 }
 
-.card-livro-destaque:hover {
-  transform: translateY(-2px);
-}
-
-.card-livro-destaque img {
+.card-livro img,
+.card-livro-sem-capa {
   width: 100%;
   aspect-ratio: 2 / 3;
-  object-fit: cover;
-  border: 1px solid var(--cor-borda);
   margin-bottom: 8px;
+  border-radius: 12px;
+  background-color: var(--cor-borda);
+  object-fit: cover;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.card-livro-destaque strong {
-  display: block;
+.card-livro:hover img {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(16, 0, 43, 0.18);
+}
+
+.card-livro strong {
   font-size: 0.9rem;
   line-height: 1.3;
 }
 
-.card-livro-destaque p {
-  margin: 2px 0 0;
+.card-livro-autor {
+  color: var(--cor-acento-escuro);
   font-size: 0.8rem;
+}
+
+.card-livro-total {
   color: var(--cor-texto-suave);
 }
-
-.card-livro-destaque-nota {
-  color: var(--cor-destaque) !important;
-}
-
-.estrelas {
-  color: var(--cor-destaque);
-  letter-spacing: 1px;
-  margin: 4px 0;
-}
-
-/* ---------------------------------------------------------
-   Cabeçalho da seção de resenhas
---------------------------------------------------------- */
 
 .cabecalho-resenhas {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 20px;
-}
-
-.rotulo-comunidade {
-  display: block;
-  font-size: 0.8rem;
-  color: var(--cor-acento);
-  font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 18px;
 }
 
 .cabecalho-resenhas h1 {
-  font-size: 1.75rem;
-  margin-bottom: 4px;
+  margin: 2px 0 4px;
+  font-size: 1.5rem;
 }
 
 .cabecalho-resenhas p {
-  color: var(--cor-texto-suave);
-  font-size: 0.9rem;
   margin: 0;
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
 }
 
 .cabecalho-resenhas .botao-primario {
+  padding: 9px 16px;
+  font-size: 0.85rem;
   text-decoration: none;
   white-space: nowrap;
-  align-self: center;
-  padding: 8px 18px;
-  font-size: 0.85rem;
-  border-radius: 999px;
 }
 
-/* ---------------------------------------------------------
-   Filtro por gênero
---------------------------------------------------------- */
-
-.filtros-genero {
+.abas-ordenacao {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 24px;
+  gap: 20px;
+  margin: 18px 0 20px;
+  border-bottom: 1px solid var(--cor-borda);
 }
 
-.filtros-genero button {
-  background-color: var(--cor-superficie);
-  border: 1px solid var(--cor-borda);
-  border-radius: 999px;
-  padding: 6px 16px;
+.abas-ordenacao button {
+  margin-bottom: -1px;
+  padding: 8px 0;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--cor-texto-suave);
   font-size: 0.85rem;
-  color: var(--cor-texto);
 }
 
-.filtros-genero button:hover {
-  border-color: var(--cor-acento);
+.abas-ordenacao button.aba-ativa {
+  border-bottom-color: var(--cor-acento);
+  color: var(--cor-acento);
+  font-weight: 600;
 }
 
-.filtros-genero button.filtro-ativo {
-  background-color: var(--cor-primaria);
-  border-color: var(--cor-primaria);
-  color: var(--cor-fundo);
+.feed-vazio {
+  color: var(--cor-texto-suave);
 }
-
-/* ---------------------------------------------------------
-   Lista de resenhas
---------------------------------------------------------- */
 
 .lista-resenhas {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .card-resenha {
   display: flex;
-  gap: 20px;
-  background-color: var(--cor-superficie);
+  gap: 18px;
+  padding: 20px;
   border: 1px solid var(--cor-borda);
-  border-radius: 4px;
-  padding: 24px;
+  border-radius: 12px;
+  background-color: var(--cor-superficie);
+  box-shadow: 0 1px 3px rgba(16, 0, 43, 0.06);
 }
 
-.card-resenha img {
-  width: 100px;
-  height: 150px;
-  object-fit: cover;
+.card-resenha-capa {
   flex-shrink: 0;
-  border: 1px solid var(--cor-borda);
+  align-self: flex-start;
+}
+
+.card-resenha-capa img {
+  width: 96px;
+  height: 144px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .card-resenha-conteudo {
@@ -179,101 +159,81 @@
 }
 
 .card-resenha-livro {
+  margin: 0;
   font-size: 0.85rem;
   color: var(--cor-texto-suave);
-  margin: 0;
 }
 
-.card-resenha-livro strong {
+.card-resenha-livro a {
   color: var(--cor-texto);
-}
-
-.link-livro-resenha {
+  font-weight: 700;
   text-decoration: none;
-  color: inherit;
 }
 
-.link-livro-resenha:hover strong {
-  text-decoration: underline;
+.card-resenha-livro a:hover {
   color: var(--cor-acento);
+  text-decoration: underline;
+}
+
+.card-resenha-livro span {
+  color: var(--cor-acento-escuro);
 }
 
 .card-resenha-tempo {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--cor-texto-suave);
   white-space: nowrap;
 }
 
 .card-resenha-conteudo h2 {
-  font-size: 1.25rem;
-  margin: 0;
+  margin: 2px 0 0;
+  font-size: 1.1rem;
   overflow-wrap: anywhere;
 }
 
 .card-resenha-texto {
-  color: var(--cor-texto);
-  margin: 4px 0 8px;
+  margin: 2px 0 8px;
+  font-size: 0.9rem;
   overflow-wrap: anywhere;
   word-break: break-word;
   white-space: pre-wrap;
+}
+
+.card-resenha-rodape {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .card-resenha-autor {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--cor-texto-suave);
 }
 
 .card-resenha-acoes {
-  margin-top: 8px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.botao-excluir {
-  background: transparent;
-  border: 1px solid var(--cor-borda);
-  border-radius: 999px;
-  padding: 4px 14px;
-  font-size: 0.85rem;
-  color: var(--cor-texto-suave);
-}
+@media (max-width: 560px) {
+  .card-resenha {
+    gap: 14px;
+    padding: 16px;
+  }
 
-.botao-excluir:hover {
-  border-color: #c1121f;
-  color: #c1121f;
-}
+  .card-resenha-capa img {
+    width: 72px;
+    height: 108px;
+  }
 
-.botao-curtir {
-  background: transparent;
-  border: 1px solid var(--cor-borda);
-  border-radius: 999px;
-  padding: 4px 14px;
-  font-size: 0.85rem;
-  color: var(--cor-texto-suave);
-}
-
-.botao-curtir:hover {
-  border-color: var(--cor-destaque);
-}
-
-.botao-curtir.ativo {
-  border-color: var(--cor-destaque);
-  color: var(--cor-destaque);
-}
-
-.avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  color: var(--cor-fundo);
-  font-size: 0.75rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  .cabecalho-resenhas {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

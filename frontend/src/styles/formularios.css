@@ -1,8 +1,3 @@
-/* src/styles/formularios.css
- *
- * Estilo de formulário compartilhado entre Login, Cadastro e Nova Resenha.
- */
-
 form {
   display: flex;
   flex-direction: column;
@@ -26,7 +21,7 @@ textarea {
   color: var(--cor-texto);
   background-color: var(--cor-superficie);
   border: 1px solid var(--cor-borda);
-  border-radius: 4px;
+  border-radius: 8px;
   padding: 10px 12px;
 }
 
@@ -39,18 +34,18 @@ textarea:focus {
 
 textarea {
   resize: vertical;
-  font-family: var(--fonte-corpo);
 }
 
 button[type='submit'],
 .botao-primario {
   background-color: var(--cor-acento);
-  color: var(--cor-fundo);
+  color: var(--cor-sobre-acento);
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   padding: 12px 20px;
   font-weight: 600;
   font-size: 1rem;
+  transition: background-color 0.15s ease;
 }
 
 button[type='submit']:hover,
@@ -64,13 +59,13 @@ button[type='submit']:disabled {
 }
 
 .mensagem-erro {
-  color: var(--cor-destaque);
+  color: var(--cor-erro);
   font-size: 0.9rem;
   margin: 0;
 }
 
 .mensagem-sucesso {
-  color: var(--cor-primaria-clara);
+  color: var(--cor-acento-escuro);
   font-size: 0.9rem;
   margin: 0;
 }

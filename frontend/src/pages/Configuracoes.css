@@ -1,52 +1,17 @@
-/* src/pages/Configuracoes.css */
-
 .pagina-configuracoes h1 {
-  font-size: 1.75rem;
   margin-bottom: 4px;
+  font-size: 1.9rem;
 }
 
 .subtitulo-configuracoes {
+  margin: 0 0 28px;
   color: var(--cor-texto-suave);
   font-size: 0.9rem;
-  margin: 0 0 32px;
 }
 
 .secao-config {
-  background-color: var(--cor-superficie);
-  border: 1px solid var(--cor-borda);
-  border-radius: 4px;
-  padding: 24px;
   margin-bottom: 20px;
-}
-
-.secao-config h2 {
-  font-size: 1.1rem;
-  margin-bottom: 16px;
-}
-
-.opcoes-config {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.opcoes-config button {
-  background-color: var(--cor-fundo);
-  border: 1px solid var(--cor-borda);
-  border-radius: 999px;
-  padding: 8px 20px;
-  font-size: 0.9rem;
-  color: var(--cor-texto);
-}
-
-.opcoes-config button:hover {
-  border-color: var(--cor-acento);
-}
-
-.opcoes-config button.opcao-ativa {
-  background-color: var(--cor-primaria);
-  border-color: var(--cor-primaria);
-  color: var(--cor-fundo);
+  padding: 24px;
 }
 
 .linha-toggle {
@@ -54,20 +19,26 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 12px 0;
+  padding: 14px 0;
   border-top: 1px solid var(--cor-borda);
+  color: var(--cor-texto);
   cursor: pointer;
 }
 
-.linha-toggle:first-of-type {
-  border-top: none;
+.secao-config h2 + .linha-toggle {
   padding-top: 0;
+  border-top: none;
+}
+
+.linha-toggle:last-child {
+  padding-bottom: 0;
 }
 
 .linha-toggle span {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  font-size: 0.95rem;
 }
 
 .linha-toggle small {
@@ -77,8 +48,8 @@
 }
 
 .linha-toggle input[type='checkbox'] {
-  width: 44px;
-  height: 24px;
   flex-shrink: 0;
+  width: 20px;
+  height: 20px;
   accent-color: var(--cor-acento);
 }

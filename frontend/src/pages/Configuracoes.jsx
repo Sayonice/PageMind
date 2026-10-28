@@ -1,8 +1,3 @@
-// src/pages/Configuracoes.jsx
-//
-// Preferências ficam só no navegador (localStorage) — não é algo do
-// perfil salvo no banco, então não tem rota de back-end aqui.
-
 import { useState } from 'react';
 import { obterConfiguracoes, salvarConfiguracoes } from '../utils/configuracoes';
 import './Configuracoes.css';
@@ -19,8 +14,25 @@ const OPCOES_FONTE = [
   { valor: 'grande', rotulo: 'Grande' },
 ];
 
+function GrupoOpcoes({ opcoes, atual, aoEscolher }) {
+  return (
+    <div className="chips">
+      {opcoes.map((opcao) => (
+        <button
+          key={opcao.valor}
+          type="button"
+          className={atual === opcao.valor ? 'chip chip-ativo' : 'chip'}
+          onClick={() => aoEscolher(opcao.valor)}
+        >
+          {opcao.rotulo}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function Configuracoes() {
-  const [config, setConfig] = useState(obterConfiguracoes());
+  const [config, setConfig] = useState(obterConfiguracoes);
   const [salvo, setSalvo] = useState(false);
 
   function atualizar(mudanca) {
@@ -33,44 +45,31 @@ export default function Configuracoes() {
 
   return (
     <div className="pagina-configuracoes">
+      <span className="rotulo-secao">Preferências</span>
       <h1>Configurações</h1>
       <p className="subtitulo-configuracoes">
         Essas preferências ficam salvas só neste navegador.
       </p>
 
-      <section className="secao-config">
+      <section className="painel secao-config">
         <h2>Tema</h2>
-        <div className="opcoes-config">
-          {OPCOES_TEMA.map((opcao) => (
-            <button
-              key={opcao.valor}
-              type="button"
-              className={config.tema === opcao.valor ? 'opcao-ativa' : ''}
-              onClick={() => atualizar({ tema: opcao.valor })}
-            >
-              {opcao.rotulo}
-            </button>
-          ))}
-        </div>
+        <GrupoOpcoes
+          opcoes={OPCOES_TEMA}
+          atual={config.tema}
+          aoEscolher={(valor) => atualizar({ tema: valor })}
+        />
       </section>
 
-      <section className="secao-config">
+      <section className="painel secao-config">
         <h2>Tipografia</h2>
-        <div className="opcoes-config">
-          {OPCOES_FONTE.map((opcao) => (
-            <button
-              key={opcao.valor}
-              type="button"
-              className={config.tamanhoFonte === opcao.valor ? 'opcao-ativa' : ''}
-              onClick={() => atualizar({ tamanhoFonte: opcao.valor })}
-            >
-              {opcao.rotulo}
-            </button>
-          ))}
-        </div>
+        <GrupoOpcoes
+          opcoes={OPCOES_FONTE}
+          atual={config.tamanhoFonte}
+          aoEscolher={(valor) => atualizar({ tamanhoFonte: valor })}
+        />
       </section>
 
-      <section className="secao-config">
+      <section className="painel secao-config">
         <h2>Layout</h2>
 
         <label className="linha-toggle">

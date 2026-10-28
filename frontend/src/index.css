@@ -1,45 +1,38 @@
-/* src/index.css
- *
- * Tokens de design do PageMind — paleta "biblioteca/acervo":
- * verde-floresta, papel envelhecido, dourado e vermelho-vinho.
- * Este arquivo cuida só do global: fontes, cores, reset. O estilo
- * de cada tela fica em App.css.
- */
-
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Cores base (fundo e texto continuam em tom de papel envelhecido) */
-  --cor-fundo: #ffffff;
-  --cor-superficie: #f7f2e7;
-  --cor-texto: #211d18;
-  --cor-texto-suave: #6b6255;
-  --cor-borda: #d8cbb0;
+  --cor-fundo: #edeaf5;
+  --cor-superficie: #ffffff;
+  --cor-texto: #10002b;
+  --cor-texto-suave: #6a6483;
+  --cor-borda: #e2dcef;
 
-  /* Acentos: paleta "Crepúsculo Vívido" */
-  --cor-primaria: #10002b;        /* navbar, painel escuro */
-  --cor-primaria-clara: #3c096c;  /* hover sobre fundo escuro */
+  --cor-primaria: #10002b;
+  --cor-primaria-media: #240046;
+  --cor-primaria-clara: #3c096c;
+  --cor-acento-escuro: #5a189a;
+  --cor-acento: #7b2cbf;
+  --cor-acento-claro: #9d4edd;
+  --cor-realce: #c77dff;
+  --cor-realce-suave: #e0aaff;
+  --cor-sobre-acento: #ffffff;
+  --cor-destaque: #5a189a;
 
-  --cor-acento: #7b2cbf;          /* botões, links */
-  --cor-acento-escuro: #5a189a;   /* hover de botões/links */
+  --cor-erro: #c0265a;
+  --cor-estrela: #f59e0b;
 
-  --cor-destaque: #5a189a;        /* nota/avaliação */
-
-  /* Tipografia */
-  --fonte-display: 'Fraunces', Georgia, serif;
+  --fonte-display: 'DM Serif Display', Georgia, serif;
   --fonte-corpo: 'Inter', system-ui, sans-serif;
 
-  /* Escala de fonte (ver Configurações) — 1 = tamanho padrão */
   --escala-fonte: 1;
 }
 
-/* Tema escuro (opcional, escolhido em Configurações) */
 [data-theme='escuro'] {
-  --cor-fundo: #1a1625;
-  --cor-superficie: #241b35;
-  --cor-texto: #ede6d6;
-  --cor-texto-suave: #b4a9c2;
-  --cor-borda: #3c096c;
+  --cor-fundo: #14082a;
+  --cor-superficie: #1f0f3b;
+  --cor-texto: #f1eafa;
+  --cor-texto-suave: #b7a8d1;
+  --cor-borda: #3a2463;
 }
 
 * {
@@ -55,14 +48,11 @@ body {
   line-height: 1.5;
 }
 
-/* "Sem animações" (Configurações): remove transições em toda a UI */
 body.sem-animacoes * {
   transition: none !important;
   animation: none !important;
 }
 
-/* "Visualização compacta" (Configurações): reduz espaçamentos dos
-   contêineres mais comuns, sem precisar tocar no CSS de cada página */
 body.layout-compacto .card-resenha,
 body.layout-compacto .card-biblioteca,
 body.layout-compacto .secao-config,
@@ -77,8 +67,7 @@ body.layout-compacto .grade-biblioteca {
 }
 
 h1, h2, h3 {
-  font-family: var(--fonte-display);
-  font-weight: 600;
+  font-weight: 700;
   margin: 0 0 0.5em;
   line-height: 1.2;
 }
@@ -95,4 +84,23 @@ button {
 img {
   max-width: 100%;
   display: block;
+}
+
+.logo-pagemind {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo-pagemind-icone {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.12);
 }

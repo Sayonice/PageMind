@@ -1,20 +1,15 @@
-// src/pages/NovaResenha.jsx
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { buscarLivros } from '../services/googleBooks';
 import { criarResenha } from '../services/api';
-import '../styles/formularios.css';
 import './NovaResenha.css';
 
 export default function NovaResenha() {
-  // --- Estado da busca de livro ---
   const [termoBusca, setTermoBusca] = useState('');
   const [resultados, setResultados] = useState([]);
   const [buscando, setBuscando] = useState(false);
   const [livroSelecionado, setLivroSelecionado] = useState(null);
 
-  // --- Estado do formulário de resenha ---
   const [tituloResenha, setTituloResenha] = useState('');
   const [nota, setNota] = useState(5);
   const [texto, setTexto] = useState('');
@@ -30,18 +25,12 @@ export default function NovaResenha() {
     setBuscando(true);
 
     try {
-      const livros = await buscarLivros(termoBusca);
-      setResultados(livros);
+      setResultados(await buscarLivros(termoBusca));
     } catch (erroCapturado) {
       setErro(erroCapturado.message);
     } finally {
       setBuscando(false);
     }
-  }
-
-  function handleTrocarLivro() {
-    // Volta pra etapa de busca, caso o usuário tenha escolhido o livro errado
-    setLivroSelecionado(null);
   }
 
   async function handleSubmit(evento) {
@@ -62,13 +51,14 @@ export default function NovaResenha() {
     }
   }
 
-  // --- Etapa 1: buscar e escolher o livro ---
   if (!livroSelecionado) {
     return (
       <div className="pagina-nova-resenha">
+        <span className="rotulo-secao">Passo 1 de 2</span>
         <h1>Nova resenha</h1>
+        <p className="subtitulo-nova-resenha">Escolha o livro que você quer resenhar.</p>
 
-        <form onSubmit={handleBuscar}>
+        <form onSubmit={handleBuscar} className="painel form-busca-resenha">
           <label>
             Buscar livro
             <input
@@ -85,7 +75,7 @@ export default function NovaResenha() {
 
         {erro && <p className="mensagem-erro">{erro}</p>}
 
-        <ul className="lista-resultados-livro">
+        <ul className="lista-resultados-resenha">
           {resultados.map((livro) => (
             <li key={livro.google_books_id}>
               <button
@@ -108,12 +98,12 @@ export default function NovaResenha() {
     );
   }
 
-  // --- Etapa 2: escrever a resenha sobre o livro escolhido ---
   return (
     <div className="pagina-nova-resenha">
-      <h1>Resenhando: {livroSelecionado.titulo}</h1>
+      <span className="rotulo-secao">Passo 2 de 2</span>
+      <h1>Escreva sua resenha</h1>
 
-      <div className="livro-escolhido">
+      <div className="painel livro-escolhido">
         {livroSelecionado.imagem_capa && (
           <img src={livroSelecionado.imagem_capa} alt={`Capa de ${livroSelecionado.titulo}`} />
         )}
@@ -121,12 +111,12 @@ export default function NovaResenha() {
           <strong>{livroSelecionado.titulo}</strong>
           <p>{livroSelecionado.autor}</p>
         </div>
-        <button type="button" onClick={handleTrocarLivro}>
+        <button type="button" className="botao-acao" onClick={() => setLivroSelecionado(null)}>
           Trocar livro
         </button>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="painel form-resenha">
         <label>
           Título da resenha
           <input

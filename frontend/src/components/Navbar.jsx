@@ -1,9 +1,10 @@
-// src/components/Navbar.jsx
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
 import { buscarResenhas } from '../services/api';
 import { corAvatar, iniciais } from '../utils/formatacao';
+import Logo from './Logo';
+import { IconeBusca, IconeConfig, IconeFechar, IconeMenu } from './Icones';
 import './Navbar.css';
 
 const LINKS_MENU = [
@@ -36,7 +37,6 @@ export default function Navbar() {
     setBuscouAlgumaVez(false);
   }, []);
 
-  // Fecha os dois menus suspensos (hamburguer e busca) ao clicar fora deles.
   useEffect(() => {
     function aoClicarFora(evento) {
       if (menuRef.current && !menuRef.current.contains(evento.target)) {
@@ -56,32 +56,18 @@ export default function Navbar() {
     navigate('/login');
   }
 
-  function toggleMenu() {
+  function alternarMenu() {
     fecharBusca();
     setMenuAberto((atual) => !atual);
   }
 
-  function abrirBusca() {
-    setMenuAberto(false);
-    setBuscaAberta(true);
-  }
-
-  function handleCliqueLupa(evento) {
-    if (!buscaAberta) {
-      evento.preventDefault();
-      abrirBusca();
-    }
-    // Se já está aberta, deixa o clique seguir como envio normal do formulário.
-  }
-
-  function handleSubmitBusca(evento) {
-    evento.preventDefault();
-    const valorLimpo = termoBusca.trim();
-    if (!valorLimpo) return;
+  function pesquisar() {
+    const termo = termoBusca.trim();
+    if (!termo) return;
 
     setCarregandoBusca(true);
     setErroBusca('');
-    buscarResenhas(valorLimpo)
+    buscarResenhas(termo)
       .then((resultado) => {
         setResultadosBusca(resultado);
         setBuscouAlgumaVez(true);
@@ -90,26 +76,27 @@ export default function Navbar() {
       .finally(() => setCarregandoBusca(false));
   }
 
+  function handleCliqueLupa() {
+    if (buscaAberta) {
+      pesquisar();
+      return;
+    }
+    setMenuAberto(false);
+    setBuscaAberta(true);
+  }
+
+  function handleSubmitBusca(evento) {
+    evento.preventDefault();
+    pesquisar();
+  }
+
   const nome = usuario?.nome || '';
+  const mostrarPainel = buscaAberta && (carregandoBusca || erroBusca || buscouAlgumaVez);
 
   return (
     <header className="navbar">
       <Link to="/feed" className="navbar-logo">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path
-            d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M4 19a2.5 2.5 0 0 1 2.5-2.5H20"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <span>PageMind</span>
+        <Logo />
       </Link>
 
       <div className="navbar-acoes">
@@ -123,45 +110,37 @@ export default function Navbar() {
               className="navbar-busca-input"
               value={termoBusca}
               onChange={(evento) => setTermoBusca(evento.target.value)}
-              placeholder="Nome do livro ou da pessoa..."
+              placeholder="Nome do livro ou da pessoa"
               tabIndex={buscaAberta ? 0 : -1}
             />
-
             <button
-              type="submit"
-              className="navbar-icone"
+              type="button"
+              className="navbar-botao"
               onClick={handleCliqueLupa}
               title="Buscar resenhas"
               aria-label="Buscar resenhas"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.6" />
-                <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              </svg>
+              <IconeBusca />
             </button>
-
             {buscaAberta && (
               <button
                 type="button"
-                className="navbar-busca-fechar"
+                className="navbar-botao navbar-botao-pequeno"
                 onClick={fecharBusca}
                 aria-label="Fechar busca"
               >
-                ✕
+                <IconeFechar tamanho={16} />
               </button>
             )}
           </form>
 
-          {buscaAberta && (carregandoBusca || erroBusca || buscouAlgumaVez) && (
+          {mostrarPainel && (
             <div className="navbar-busca-painel">
               {carregandoBusca && <p className="navbar-busca-status">Buscando...</p>}
               {erroBusca && <p className="navbar-busca-status navbar-busca-erro">{erroBusca}</p>}
-              {!carregandoBusca &&
-                !erroBusca &&
-                buscouAlgumaVez &&
-                resultadosBusca.length === 0 && (
-                  <p className="navbar-busca-status">Nenhuma resenha encontrada.</p>
-                )}
+              {!carregandoBusca && !erroBusca && resultadosBusca.length === 0 && (
+                <p className="navbar-busca-status">Nenhuma resenha encontrada.</p>
+              )}
 
               {resultadosBusca.length > 0 && (
                 <ul className="navbar-busca-resultados">
@@ -182,21 +161,8 @@ export default function Navbar() {
           )}
         </div>
 
-        <Link
-          to="/configuracoes"
-          className="navbar-icone"
-          title="Configurações"
-          aria-label="Configurações"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" strokeWidth="1.6" />
-            <path
-              d="M19.4 13.5c.04-.33.06-.66.06-1s-.02-.67-.06-1l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.4 7.4 0 0 0-1.73-1l-.36-2.54A.5.5 0 0 0 14 2h-3.84a.5.5 0 0 0-.5.44l-.36 2.54c-.63.24-1.21.58-1.73 1l-2.39-.96a.5.5 0 0 0-.6.22L2.66 8.56a.5.5 0 0 0 .12.64L4.8 10.78c-.04.33-.06.66-.06 1s.02.67.06 1l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.4.3.6.22l2.39-.96c.52.42 1.1.76 1.73 1l.36 2.54c.04.25.25.44.5.44H14c.25 0 .46-.19.5-.44l.36-2.54c.63-.24 1.21-.58 1.73-1l2.39.96c.2.08.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64L19.4 13.5Z"
-              stroke="currentColor"
-              strokeWidth="1.3"
-              strokeLinejoin="round"
-            />
-          </svg>
+        <Link to="/configuracoes" className="navbar-botao" title="Configurações" aria-label="Configurações">
+          <IconeConfig />
         </Link>
 
         <Link
@@ -211,14 +177,12 @@ export default function Navbar() {
         <div className="navbar-menu" ref={menuRef}>
           <button
             type="button"
-            className="navbar-hamburguer"
-            onClick={toggleMenu}
+            className="navbar-botao"
+            onClick={alternarMenu}
             aria-label="Abrir menu"
             aria-expanded={menuAberto}
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-            </svg>
+            <IconeMenu tamanho={22} />
           </button>
 
           {menuAberto && (

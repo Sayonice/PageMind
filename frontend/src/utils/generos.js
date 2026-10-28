@@ -1,10 +1,3 @@
-// src/utils/generos.js
-//
-// A Google Books API devolve categorias em inglês, geralmente como uma
-// string hierárquica (ex: "Fiction / Fantasy / Epic"). Aqui a gente pega
-// só o primeiro nível e traduz pros termos mais comuns em português.
-// Categorias fora da lista aparecem como vieram (sem tradução).
-
 const TRADUCOES = {
   Fiction: 'Ficção',
   'Juvenile Fiction': 'Ficção Juvenil',
@@ -47,7 +40,6 @@ const TRADUCOES = {
   'Self-Help': 'Autoajuda',
 };
 
-// Reduz "Fiction / Fantasy / Epic" para só "Fiction" antes de traduzir.
 export function traduzirGenero(generoOriginal) {
   if (!generoOriginal) return '';
   const primeiroNivel = generoOriginal.split('/')[0].trim();

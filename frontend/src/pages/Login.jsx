@@ -1,10 +1,8 @@
-// src/pages/Login.jsx
-
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
-import '../styles/formularios.css';
-import './AuthPages.css';
+import CampoAuth from '../components/CampoAuth';
+import LayoutAuth from '../components/LayoutAuth';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -16,13 +14,13 @@ export default function Login() {
   const navigate = useNavigate();
 
   async function handleSubmit(evento) {
-    evento.preventDefault(); // impede o recarregamento padrão do formulário
+    evento.preventDefault();
     setErro('');
     setCarregando(true);
 
     try {
       await login({ email, senha });
-      navigate('/feed'); // redireciona após login bem-sucedido
+      navigate('/feed');
     } catch (erroCapturado) {
       setErro(erroCapturado.message);
     } finally {
@@ -31,47 +29,41 @@ export default function Login() {
   }
 
   return (
-    <div className="pagina-auth">
-      <div className="pagina-auth-painel">
-        <span className="pagina-auth-marca">PageMind</span>
-        <p className="pagina-auth-frase">Bem-vindo de volta.</p>
-      </div>
+    <LayoutAuth frase="Bem-vindo de volta.">
+      <h1>Entrar</h1>
+      <p className="pagina-auth-subtitulo">Use suas credenciais institucionais para acessar.</p>
 
-      <div className="pagina-auth-conteudo">
-        <h1>Entrar no PageMind</h1>
+      <form onSubmit={handleSubmit}>
+        <CampoAuth
+          rotulo="E-mail institucional"
+          icone="envelope"
+          type="email"
+          placeholder="nome@aluno.senai.br"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-        <form onSubmit={handleSubmit}>
-          <label>
-            E-mail
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </label>
+        <CampoAuth
+          rotulo="Senha"
+          icone="cadeado"
+          type="password"
+          placeholder="Sua senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          required
+        />
 
-          <label>
-            Senha
-            <input
-              type="password"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              required
-            />
-          </label>
+        {erro && <p className="mensagem-erro">{erro}</p>}
 
-          {erro && <p className="mensagem-erro">{erro}</p>}
+        <button type="submit" disabled={carregando}>
+          {carregando ? 'Entrando...' : 'Entrar'}
+        </button>
+      </form>
 
-          <button type="submit" disabled={carregando}>
-            {carregando ? 'Entrando...' : 'Entrar'}
-          </button>
-        </form>
-
-        <p>
-          Não tem conta? <Link to="/cadastro">Cadastre-se</Link>
-        </p>
-      </div>
-    </div>
+      <p className="pagina-auth-troca">
+        Não tem uma conta? <Link to="/cadastro">Cadastrar-se</Link>
+      </p>
+    </LayoutAuth>
   );
 }

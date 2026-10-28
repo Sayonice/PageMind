@@ -1,16 +1,5 @@
-// src/services/api.js
-//
-// Centraliza a comunicação com o backend PHP.
-// Quando o endereço do servidor mudar (ex: ao subir para a AWS),
-// só precisa trocar aqui.
-
 const API_URL = 'http://localhost:8000';
 
-/**
- * Função genérica para fazer requisições POST em JSON.
- * `credentials: 'include'` é importante para o login funcionar,
- * pois é o que permite o navegador guardar o cookie de sessão do PHP.
- */
 async function postJSON(rota, dados) {
   const resposta = await fetch(`${API_URL}${rota}`, {
     method: 'POST',
@@ -22,7 +11,6 @@ async function postJSON(rota, dados) {
   const json = await resposta.json();
 
   if (!resposta.ok) {
-    // Repassa a mensagem de erro que o PHP já formatou
     throw new Error(json.mensagem || 'Erro na requisição.');
   }
 
@@ -45,7 +33,7 @@ export async function verificarSessao() {
   const resposta = await fetch(`${API_URL}/auth/sessao.php`, {
     credentials: 'include',
   });
-  return resposta.json(); // { sucesso: true, usuario: {...} | null }
+  return resposta.json();
 }
 
 export function criarResenha({ livro, resenha }) {
@@ -82,7 +70,7 @@ export async function listarLivrosDestaque() {
 
 export async function curtirResenha(idResenha) {
   const json = await postJSON('/resenhas/curtir.php', { id_resenha: idResenha });
-  return json; // { sucesso, curtiu, total_curtidas }
+  return json;
 }
 
 export function excluirResenha(idResenha) {
@@ -100,7 +88,7 @@ export async function buscarRecomendacoes() {
     throw new Error(json.mensagem || 'Erro ao carregar recomendações.');
   }
 
-  return json; // { baseado_em_generos, livros }
+  return json;
 }
 
 export async function buscarDetalhesLivro(idLivro) {
@@ -114,7 +102,7 @@ export async function buscarDetalhesLivro(idLivro) {
     throw new Error(json.mensagem || 'Erro ao carregar o livro.');
   }
 
-  return json; // { livro, resenhas }
+  return json;
 }
 
 export async function listarComentarios(idResenha) {
@@ -183,7 +171,7 @@ export async function buscarPerfil() {
     throw new Error(json.mensagem || 'Erro ao carregar o perfil.');
   }
 
-  return json; // { usuario, estatisticas, minhas_resenhas }
+  return json;
 }
 
 export function atualizarPerfil({ nome, bio }) {
@@ -203,7 +191,7 @@ async function getJSON(rota) {
 
 export async function buscarDashboardProfessor() {
   const json = await getJSON('/professor/dashboard.php');
-  return json; // { resumo, alunos_ativos, livros_mais_avaliados }
+  return json;
 }
 
 export async function listarAlunos() {

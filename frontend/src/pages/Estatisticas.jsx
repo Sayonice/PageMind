@@ -1,16 +1,15 @@
-// src/pages/Estatisticas.jsx
-
 import { useEffect, useState } from 'react';
 import { buscarEstatisticas } from '../services/api';
 import { estrelas } from '../utils/formatacao';
 import { traduzirGenero } from '../utils/generos';
+import { IconeLivros, IconePagina, IconeCaneta, IconeEtiqueta } from '../components/Icones';
 import './Estatisticas.css';
 
 const CARTOES = [
-  { chave: 'livros_lidos', rotulo: 'Livros lidos', icone: '📚' },
-  { chave: 'paginas_lidas', rotulo: 'Páginas lidas', icone: '📖' },
-  { chave: 'resenhas_publicadas', rotulo: 'Resenhas publicadas', icone: '✍️' },
-  { chave: 'generos_explorados', rotulo: 'Gêneros explorados', icone: '🧭' },
+  { chave: 'livros_lidos', rotulo: 'Livros lidos', Icone: IconeLivros },
+  { chave: 'paginas_lidas', rotulo: 'Páginas lidas', Icone: IconePagina },
+  { chave: 'resenhas_publicadas', rotulo: 'Resenhas publicadas', Icone: IconeCaneta },
+  { chave: 'generos_explorados', rotulo: 'Gêneros explorados', Icone: IconeEtiqueta },
 ];
 
 export default function Estatisticas() {
@@ -30,20 +29,25 @@ export default function Estatisticas() {
 
   return (
     <div className="pagina-estatisticas">
-      <h1>Estatísticas de leitura</h1>
-      <p className="subtitulo-estatisticas">Um resumo da sua jornada de leitura no PageMind.</p>
+      <header className="cabecalho-estatisticas">
+        <span className="rotulo-secao">Meus dados</span>
+        <h1>Estatísticas</h1>
+        <p>Um resumo da sua jornada de leitura no PageMind.</p>
+      </header>
 
       <div className="grade-cartoes-estatisticas">
-        {CARTOES.map((cartao) => (
-          <div key={cartao.chave} className="cartao-estatistica">
-            <span className="cartao-estatistica-icone">{cartao.icone}</span>
-            <strong>{(dados[cartao.chave] ?? 0).toLocaleString('pt-BR')}</strong>
-            <p>{cartao.rotulo}</p>
+        {CARTOES.map(({ chave, rotulo, Icone }) => (
+          <div key={chave} className="cartao-estatistica">
+            <span className="icone-cartao">
+              <Icone tamanho={20} />
+            </span>
+            <strong>{(dados[chave] ?? 0).toLocaleString('pt-BR')}</strong>
+            <p>{rotulo}</p>
           </div>
         ))}
       </div>
 
-      <section className="secao-estatisticas">
+      <section className="painel secao-estatisticas">
         <h2>Gêneros mais lidos</h2>
         {dados.generos_mais_lidos.length === 0 ? (
           <p>Marque livros como lidos para ver seus gêneros favoritos aqui.</p>
@@ -51,18 +55,18 @@ export default function Estatisticas() {
           <div className="barras-generos">
             {dados.generos_mais_lidos.map((item) => (
               <div key={item.genero} className="linha-barra-genero">
-                <span className="rotulo-barra-genero">{traduzirGenero(item.genero)}</span>
+                <span>{traduzirGenero(item.genero)}</span>
                 <div className="barra-genero">
                   <div className="barra-genero-preenchida" style={{ width: `${item.percentual}%` }} />
                 </div>
-                <span className="percentual-barra-genero">{item.percentual}%</span>
+                <span>{item.percentual}%</span>
               </div>
             ))}
           </div>
         )}
       </section>
 
-      <section className="secao-estatisticas">
+      <section className="painel secao-estatisticas">
         <h2>Livros concluídos</h2>
         {dados.livros_concluidos.length === 0 ? (
           <p>Nenhum livro concluído ainda.</p>
@@ -73,19 +77,17 @@ export default function Estatisticas() {
                 {livro.imagem_capa && (
                   <img src={livro.imagem_capa} alt={`Capa de ${livro.titulo}`} />
                 )}
-                <div>
+                <div className="item-livro-info">
                   <strong>{livro.titulo}</strong>
-                  <p>{livro.autor}</p>
-                  {livro.genero && (
-                    <p className="genero-livro-concluido">{traduzirGenero(livro.genero)}</p>
-                  )}
+                  <p className="item-livro-autor">{livro.autor}</p>
                   <p className="estrelas">
                     {livro.nota !== null ? estrelas(livro.nota) : 'Sem resenha'}
                   </p>
                 </div>
-                {livro.paginas && (
-                  <span className="paginas-livro-concluido">{livro.paginas} pág.</span>
-                )}
+                <div className="item-livro-lado">
+                  {livro.genero && <span>{traduzirGenero(livro.genero)}</span>}
+                  {livro.paginas && <span>{livro.paginas} págs.</span>}
+                </div>
               </li>
             ))}
           </ul>

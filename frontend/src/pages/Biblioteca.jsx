@@ -1,5 +1,3 @@
-// src/pages/Biblioteca.jsx
-
 import { useEffect, useMemo, useState } from 'react';
 import { listarBiblioteca, atualizarStatusBiblioteca } from '../services/api';
 import { buscarLivros } from '../services/googleBooks';
@@ -8,8 +6,8 @@ import './Biblioteca.css';
 
 const ABAS = [
   { valor: 'todos', rotulo: 'Todos' },
-  { valor: 'quero_ler', rotulo: 'Quero ler' },
   { valor: 'lendo', rotulo: 'Lendo' },
+  { valor: 'quero_ler', rotulo: 'Quero ler' },
   { valor: 'lido', rotulo: 'Lido' },
 ];
 
@@ -35,7 +33,6 @@ export default function Biblioteca() {
   }, []);
 
   function carregar() {
-    setCarregando(true);
     listarBiblioteca()
       .then(setLivros)
       .catch((erroCapturado) => setErro(erroCapturado.message))
@@ -58,8 +55,7 @@ export default function Biblioteca() {
     setErro('');
     setBuscando(true);
     try {
-      const encontrados = await buscarLivros(termoBusca);
-      setResultados(encontrados);
+      setResultados(await buscarLivros(termoBusca));
     } catch (erroCapturado) {
       setErro(erroCapturado.message);
     } finally {
@@ -98,24 +94,31 @@ export default function Biblioteca() {
 
   if (carregando) return <p>Carregando sua biblioteca...</p>;
 
+  const resumo = [
+    `${livros.length} ${livros.length === 1 ? 'livro' : 'livros'}`,
+    `${contagens.lendo} em andamento`,
+    `${contagens.lido} ${contagens.lido === 1 ? 'concluído' : 'concluídos'}`,
+  ].join(' · ');
+
   return (
     <div className="pagina-biblioteca">
       <div className="cabecalho-biblioteca">
         <div>
-          <h1>Minha biblioteca</h1>
-          <p>Acompanhe o que você já leu, está lendo ou quer ler.</p>
+          <span className="rotulo-secao">Biblioteca pessoal</span>
+          <h1 className="titulo-pagina">Minha lista</h1>
+          <p className="subtitulo-pagina">{resumo}</p>
         </div>
         <button
           type="button"
           className="botao-primario"
-          onClick={() => setMostrarBusca((v) => !v)}
+          onClick={() => setMostrarBusca((aberto) => !aberto)}
         >
           {mostrarBusca ? 'Fechar' : '+ Adicionar livro'}
         </button>
       </div>
 
       {mostrarBusca && (
-        <div className="painel-busca-biblioteca">
+        <div className="painel painel-busca-biblioteca">
           <form onSubmit={handleBuscar}>
             <label>
               Buscar livro
@@ -123,7 +126,7 @@ export default function Biblioteca() {
                 type="text"
                 value={termoBusca}
                 onChange={(e) => setTermoBusca(e.target.value)}
-                placeholder="Título ou autor..."
+                placeholder="Título ou autor"
               />
             </label>
             <button type="submit" disabled={buscando}>
@@ -142,15 +145,16 @@ export default function Biblioteca() {
                   <p>{livro.autor}</p>
                 </div>
                 <div className="card-resultado-acoes">
-                  <button type="button" onClick={() => handleAdicionar(livro, 'quero_ler')}>
-                    Quero ler
-                  </button>
-                  <button type="button" onClick={() => handleAdicionar(livro, 'lendo')}>
-                    Lendo
-                  </button>
-                  <button type="button" onClick={() => handleAdicionar(livro, 'lido')}>
-                    Lido
-                  </button>
+                  {Object.entries(ROTULO_STATUS).map(([status, rotulo]) => (
+                    <button
+                      key={status}
+                      type="button"
+                      className="botao-acao"
+                      onClick={() => handleAdicionar(livro, status)}
+                    >
+                      {rotulo}
+                    </button>
+                  ))}
                 </div>
               </li>
             ))}
@@ -160,21 +164,21 @@ export default function Biblioteca() {
 
       {erro && <p className="mensagem-erro">{erro}</p>}
 
-      <div className="abas-biblioteca">
+      <div className="chips chips-biblioteca">
         {ABAS.map((aba) => (
           <button
             key={aba.valor}
             type="button"
-            className={abaAtiva === aba.valor ? 'aba-ativa' : ''}
+            className={abaAtiva === aba.valor ? 'chip chip-ativo' : 'chip'}
             onClick={() => setAbaAtiva(aba.valor)}
           >
-            {aba.rotulo} ({contagens[aba.valor] || 0})
+            {aba.rotulo} {contagens[aba.valor] || 0}
           </button>
         ))}
       </div>
 
       {livrosFiltrados.length === 0 ? (
-        <p>Nenhum livro aqui ainda.</p>
+        <p className="biblioteca-vazia">Nenhum livro aqui ainda.</p>
       ) : (
         <div className="grade-biblioteca">
           {livrosFiltrados.map((livro) => {
@@ -185,27 +189,27 @@ export default function Biblioteca() {
 
             return (
               <div key={livro.id_livro} className="card-biblioteca">
-                <span className={`selo-status selo-${livro.status}`}>
-                  {ROTULO_STATUS[livro.status]}
-                </span>
-
-                {livro.imagem_capa && (
-                  <img src={livro.imagem_capa} alt={`Capa de ${livro.titulo}`} />
-                )}
+                <div className="card-biblioteca-capa">
+                  <span className={`selo-status selo-${livro.status}`}>
+                    {ROTULO_STATUS[livro.status]}
+                  </span>
+                  {livro.imagem_capa ? (
+                    <img src={livro.imagem_capa} alt={`Capa de ${livro.titulo}`} />
+                  ) : (
+                    <div className="card-biblioteca-sem-capa" />
+                  )}
+                </div>
 
                 <strong>{livro.titulo}</strong>
-                <p className="card-biblioteca-autor">{livro.autor}</p>
+                <span className="card-biblioteca-autor">{livro.autor}</span>
                 {livro.genero && (
-                  <p className="card-biblioteca-genero">{traduzirGenero(livro.genero)}</p>
+                  <span className="card-biblioteca-genero">{traduzirGenero(livro.genero)}</span>
                 )}
 
                 {progresso !== null && (
                   <>
                     <div className="barra-progresso">
-                      <div
-                        className="barra-progresso-preenchida"
-                        style={{ width: `${progresso}%` }}
-                      />
+                      <div className="barra-progresso-preenchida" style={{ width: `${progresso}%` }} />
                     </div>
                     <span className="texto-progresso">{progresso}% lido</span>
                   </>
@@ -215,10 +219,13 @@ export default function Biblioteca() {
                   value={livro.status}
                   onChange={(e) => handleMudarStatus(livro, e.target.value)}
                   className="seletor-status"
+                  aria-label={`Status de ${livro.titulo}`}
                 >
-                  <option value="quero_ler">Quero ler</option>
-                  <option value="lendo">Lendo</option>
-                  <option value="lido">Lido</option>
+                  {Object.entries(ROTULO_STATUS).map(([status, rotulo]) => (
+                    <option key={status} value={status}>
+                      {rotulo}
+                    </option>
+                  ))}
                 </select>
               </div>
             );

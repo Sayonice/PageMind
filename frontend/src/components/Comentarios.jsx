@@ -1,9 +1,13 @@
-// src/components/Comentarios.jsx
-
 import { useState } from 'react';
 import { listarComentarios, comentar } from '../services/api';
 import { tempoRelativo, iniciais, corAvatar } from '../utils/formatacao';
+import { IconeComentario } from './Icones';
 import './Comentarios.css';
+
+function rotuloTotal(total) {
+  if (total === 0) return 'Comentar';
+  return total === 1 ? '1 comentário' : `${total} comentários`;
+}
 
 export default function Comentarios({ idResenha, totalInicial }) {
   const [aberto, setAberto] = useState(false);
@@ -19,13 +23,10 @@ export default function Comentarios({ idResenha, totalInicial }) {
     const abrindoAgora = !aberto;
     setAberto(abrindoAgora);
 
-    // Só busca na primeira vez que abre, evitando requisições repetidas
-    // toda vez que a pessoa fecha e abre de novo.
     if (abrindoAgora && comentarios.length === 0 && totalComentarios > 0) {
       setCarregando(true);
       try {
-        const lista = await listarComentarios(idResenha);
-        setComentarios(lista);
+        setComentarios(await listarComentarios(idResenha));
       } catch (erroCapturado) {
         setErro(erroCapturado.message);
       } finally {
@@ -43,8 +44,6 @@ export default function Comentarios({ idResenha, totalInicial }) {
 
     try {
       await comentar({ idResenha, texto: novoComentario.trim() });
-      // Recarrega a lista pra pegar o comentário com o nome do autor
-      // já vindo certo do back-end, em vez de montar isso na mão aqui.
       const listaAtualizada = await listarComentarios(idResenha);
       setComentarios(listaAtualizada);
       setTotalComentarios(listaAtualizada.length);
@@ -59,12 +58,13 @@ export default function Comentarios({ idResenha, totalInicial }) {
   return (
     <div className="comentarios">
       <button type="button" className="comentarios-toggle" onClick={handleAbrir}>
-        💬 {totalComentarios > 0 ? `${totalComentarios} comentários` : 'Comentar'}
+        <IconeComentario tamanho={16} />
+        {rotuloTotal(totalComentarios)}
       </button>
 
       {aberto && (
         <div className="comentarios-corpo">
-          {carregando && <p>Carregando comentários...</p>}
+          {carregando && <p className="comentarios-status">Carregando comentários...</p>}
 
           {!carregando && comentarios.length > 0 && (
             <ul className="lista-comentarios">
@@ -91,12 +91,12 @@ export default function Comentarios({ idResenha, totalInicial }) {
           <form onSubmit={handleEnviar} className="form-comentario">
             <input
               type="text"
-              placeholder="Escreva um comentário..."
+              placeholder="Escreva um comentário"
               value={novoComentario}
               onChange={(e) => setNovoComentario(e.target.value)}
             />
             <button type="submit" disabled={enviando || novoComentario.trim() === ''}>
-              {enviando ? '...' : 'Enviar'}
+              {enviando ? 'Enviando...' : 'Enviar'}
             </button>
           </form>
 

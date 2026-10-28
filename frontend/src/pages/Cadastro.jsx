@@ -1,19 +1,17 @@
-// src/pages/Cadastro.jsx
-
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { cadastrarUsuario } from '../services/api';
-import '../styles/formularios.css';
-import './AuthPages.css';
+import CampoAuth from '../components/CampoAuth';
+import LayoutAuth from '../components/LayoutAuth';
+
+const ID_INSTITUICAO_PADRAO = 1;
 
 export default function Cadastro() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [tipo, setTipo] = useState('aluno');
-  // Por enquanto fixo em 1 (Firjan SENAI, do database.sql).
-  // Quando houver mais de uma instituição, isso vira um <select> dinâmico.
-  const [idInstituicao] = useState(1);
+  const [aceitouTermos, setAceitouTermos] = useState(false);
 
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState(false);
@@ -32,7 +30,7 @@ export default function Cadastro() {
         email,
         senha,
         tipo,
-        id_instituicao: idInstituicao,
+        id_instituicao: ID_INSTITUICAO_PADRAO,
       });
       setSucesso(true);
       setTimeout(() => navigate('/login'), 1500);
@@ -44,67 +42,73 @@ export default function Cadastro() {
   }
 
   return (
-    <div className="pagina-auth">
-      <div className="pagina-auth-painel">
-        <span className="pagina-auth-marca">PageMind</span>
-        <p className="pagina-auth-frase">Leia do seu jeito. Resenhe do seu jeito.</p>
-      </div>
+    <LayoutAuth frase="Leia do seu jeito. Resenhe do seu jeito.">
+      <h1>Criar conta</h1>
+      <p className="pagina-auth-subtitulo">Preencha os dados abaixo para se cadastrar.</p>
 
-      <div className="pagina-auth-conteudo">
-        <h1>Criar conta no PageMind</h1>
+      <form onSubmit={handleSubmit}>
+        <CampoAuth
+          rotulo="Nome completo"
+          placeholder="Ex: Maria Aparecida da Silva"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          required
+        />
 
-        <form onSubmit={handleSubmit}>
-          <label>
-            Nome completo
-            <input
-              type="text"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              required
-            />
-          </label>
+        <CampoAuth
+          rotulo="E-mail institucional"
+          icone="envelope"
+          type="email"
+          placeholder="nome@aluno.senai.br"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-          <label>
-            E-mail
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </label>
+        <CampoAuth
+          rotulo="Senha"
+          icone="cadeado"
+          type="password"
+          placeholder="Mínimo 8 caracteres"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          minLength={8}
+          required
+        />
 
-          <label>
-            Senha (mín. 8 caracteres)
-            <input
-              type="password"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              minLength={8}
-              required
-            />
-          </label>
-
-          <label>
-            Eu sou
+        <label className="campo-auth">
+          <span className="campo-auth-rotulo">Eu sou</span>
+          <span className="campo-auth-caixa">
             <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
               <option value="aluno">Aluno</option>
               <option value="professor">Professor</option>
             </select>
-          </label>
+          </span>
+        </label>
 
-          {erro && <p className="mensagem-erro">{erro}</p>}
-          {sucesso && <p className="mensagem-sucesso">Cadastro realizado! Redirecionando...</p>}
+        <label className="auth-termos">
+          <input
+            type="checkbox"
+            checked={aceitouTermos}
+            onChange={(e) => setAceitouTermos(e.target.checked)}
+          />
+          <span>
+            Li e concordo com os Termos de Uso e a Política de Privacidade da plataforma
+            institucional.
+          </span>
+        </label>
 
-          <button type="submit" disabled={carregando}>
-            {carregando ? 'Cadastrando...' : 'Cadastrar'}
-          </button>
-        </form>
+        {erro && <p className="mensagem-erro">{erro}</p>}
+        {sucesso && <p className="mensagem-sucesso">Cadastro realizado! Redirecionando...</p>}
 
-        <p>
-          Já tem conta? <Link to="/login">Entrar</Link>
-        </p>
-      </div>
-    </div>
+        <button type="submit" disabled={carregando || !aceitouTermos}>
+          {carregando ? 'Criando conta...' : 'Criar minha conta'}
+        </button>
+      </form>
+
+      <p className="pagina-auth-troca">
+        Já tem uma conta? <Link to="/login">Entrar</Link>
+      </p>
+    </LayoutAuth>
   );
 }

@@ -1,14 +1,8 @@
-// src/utils/configuracoes.js
-//
-// Preferências de interface (tema, tipografia, layout) guardadas só no
-// navegador da pessoa — não fazem parte do perfil no banco, então não
-// passam pelo back-end.
-
 const CHAVE_CONFIG = 'pagemind_config';
 
 const PADRAO = {
-  tema: 'sistema', // 'claro' | 'escuro' | 'sistema'
-  tamanhoFonte: 'medio', // 'pequeno' | 'medio' | 'grande'
+  tema: 'sistema',
+  tamanhoFonte: 'medio',
   visualizacaoCompacta: false,
   animacoes: true,
 };
