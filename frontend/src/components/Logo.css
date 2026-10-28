@@ -1,0 +1,29 @@
+.logo-pagemind {
+  display: inline-flex;
+  align-items: center;
+}
+
+.logo-img {
+  display: block;
+  height: 44px;
+  width: auto;
+}
+
+.logo-img-colorida {
+  display: none;
+}
+
+.pagina-auth-painel .logo-img {
+  height: 72px;
+}
+
+@media (max-width: 720px) {
+  .pagina-auth-painel .logo-img-branca {
+    display: none;
+  }
+
+  .pagina-auth-painel .logo-img-colorida {
+    display: block;
+    height: 56px;
+  }
+}

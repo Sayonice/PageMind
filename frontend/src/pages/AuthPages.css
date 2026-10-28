@@ -196,11 +196,6 @@
     display: none;
   }
 
-  .pagina-auth-painel .logo-pagemind-icone {
-    background-color: rgba(123, 44, 191, 0.14);
-    color: var(--cor-acento);
-  }
-
   .pagina-auth-conteudo {
     justify-content: flex-start;
     padding-top: 32px;

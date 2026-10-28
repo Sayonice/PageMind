@@ -1,12 +1,12 @@
-import { IconeLogo } from './Icones';
+import logoBranca from '../assets/logo-branca.png';
+import logoColorida from '../assets/logo-colorida.png';
+import './Logo.css';
 
 export default function Logo() {
   return (
     <span className="logo-pagemind">
-      <span className="logo-pagemind-icone">
-        <IconeLogo tamanho={18} />
-      </span>
-      PageMind
+      <img src={logoBranca} alt="PageMind" className="logo-img logo-img-branca" />
+      <img src={logoColorida} alt="PageMind" className="logo-img logo-img-colorida" />
     </span>
   );
 }
